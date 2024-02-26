@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-=tm7k9i4ws_!xr5%+ggkxuyh&^f9c7)c+h%5yi-mc+xg-@(55d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+  '35509204-cb2d-43a6-8e80-e6e06e0acb91-00-erbwws564kju.janeway.repl.co',
+                ]
 
 
 # Application definition
@@ -37,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Task_Quest_App.Task_Quest_Config'
+    'Task_Quest_App.Task_Quest_Config',
+  
 ]
 
 MIDDLEWARE = [

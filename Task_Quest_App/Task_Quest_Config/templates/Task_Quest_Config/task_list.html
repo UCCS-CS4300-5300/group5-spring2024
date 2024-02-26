@@ -1,0 +1,12 @@
+{% if task_list %}
+<h1>User: {{ current_user }}</h1>
+<ul>
+{% for task in task_list %}
+<li>
+  <h4>Task: {{ task.name }}</h4>
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>You don't have any active tasks.</p>
+{% endif %}
