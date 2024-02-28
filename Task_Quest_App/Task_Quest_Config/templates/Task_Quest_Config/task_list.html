@@ -1,12 +1,79 @@
-{% if task_list %}
-<h1>User: {{ current_user }}</h1>
-<ul>
-{% for task in task_list %}
-<li>
-  <h4>Task: {{ task.name }}</h4>
-</li>
-{% endfor %}
-</ul>
-{% else %}
-<p>You don't have any active tasks.</p>
-{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      .calendar-container, .task-list-container {
+              background-color: #fff;
+              box-shadow: 0 4px 8px rgba(0,0,0,.1);
+              border-radius: .25rem;
+              padding: 20px;
+              margin-top: 20px;
+          }
+
+          .nav-button, .view-button, .add-task {
+              transition: background-color .3s ease;
+          }
+
+          .nav-button:hover, .view-button:hover, .add-task:hover {
+              background-color: #0056b3; /* Darker shade for hover */
+          }
+
+          .view-button.active {
+              background-color: #0056b3;
+              color: #fff;
+          }
+
+          .month-year {
+              color: #000;
+          }
+
+          .day {
+              border: 1px solid #b3d7ff;
+              background-color: #f0f8ff;
+          }
+
+          .day.today {
+              background-color: #007bff;
+              color: white;
+              font-weight: bold;
+          }
+
+
+          .task-list-container {
+              background-color: #f0f8ff; 
+              border: 1px solid #b3d7ff; 
+          }
+
+          .task-list-container h4 {
+              color: #007bff;
+          }
+
+          .task-list-container .list-group-item {
+              border-color: #b3d7ff; 
+              background-color: #ffffff; 
+          }
+      </style>
+</head>
+<body>
+  <div class="task-list-container">
+      <h4 class="mb-3">Tasks</h4>
+      <ul class="list-group">
+          {% for task in task_list %}
+          <li class="list-group-item">
+              <div>Name: {{ task.name }}</div>
+              <div>Date: {{ task.date | date:"N j, Y" }}</div>
+              <div>Time: {{ task.time | date:"P" }}</div>
+              <div>Difficulty: {{ task.difficulty }}</div>
+              <div>Assigned to: {{ task.user.username }}</div>
+          </li>
+          {% empty %}
+          <li class="list-group-item">No tasks to show.</li>
+          {% endfor %}
+      </ul>
+  </div>
+</body>
+</html>
