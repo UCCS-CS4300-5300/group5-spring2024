@@ -6,11 +6,17 @@
     <title>Calendar Home Page</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+      .month {
+        font-size: 25px;
+        margin: auto; 
+        border: 1px solid black;
+      }
       .calendar-container {
           background-color: #fff;
           box-shadow: 0 4px 8px rgba(0,0,0,.1);
           border-radius: .25rem; 
           padding: 0 15px; 
+        
       }
       .calendar {
           width: 100%; 
@@ -22,6 +28,7 @@
       .calendar table {
           width: 100%;
           table-layout: fixed;
+        
       }
 
       .nav-button, .view-button, .add-task {
@@ -67,10 +74,10 @@
         </div>
         <button class="btn btn-success add-task">+ Add Task</button>
     </div>
-    <div class="calender ">
+     <div class="calender ">-
         <!-- Calendar grid goes here -->
       {{ calendar }}
-    </div>
+   </div>-
 </div>
 </body>
 </html>

@@ -15,7 +15,10 @@ from .models import Task
 def index(request):
   cal = HTMLCalendar()
   html_cal = cal.formatmonth(datetime.today().year, datetime.today().month, withyear=True)
+  html_cal = html_cal.replace('<td ', '<td height=100')
+  html_cal = html_cal.replace('<th ', '<th width=150')
   calendar = mark_safe(html_cal)
+  #calendar = calendar.replace('<td ', '<td  width="150" height="150"')
   current_month_year = datetime.today().strftime('%B %Y')
   return render(request, 'Task_Quest_Config/index.html', {'calendar' : calendar, 'current_month_year': current_month_year})
 
