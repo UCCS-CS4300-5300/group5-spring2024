@@ -29,6 +29,7 @@ def index(request):
   '''
   # Create an instance of HTMLCalendar
   cal = HTMLCalendar()
+  
   # Generate HTML for the current month's calendar
   html_cal = cal.formatmonth(datetime.today().year, datetime.today().month,     withyear=True)
   # Mark the HTML as safe to prevent autoescaping
