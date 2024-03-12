@@ -19,7 +19,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-  # This will be REPLACED with the path to our home-page view 
+   
   path('', views.index, name='index'),
-  path('home/', views.TaskListView.as_view(), name='task-list')
+  path('tasks/', views.TaskListView.as_view(), name='task-list')
 ]
