@@ -10,9 +10,8 @@
 <form action="" method="POST" enctype="multipart/form-data">
 
 
-{% csrf_token %}
-
   <body class="text-center">
+    {% csrf_token %}
     <p>
       <h1> New Task </h1>
     </p>
@@ -40,9 +39,9 @@
       <label>Priority:</label>
       {{form.priority}}
     </div>
-  </form>
-
-    <button class="btn btn-primary" type="submit">Submit</button>
+  
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
   </body>
 </form>
 

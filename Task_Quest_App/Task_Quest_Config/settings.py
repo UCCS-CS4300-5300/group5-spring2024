@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
   '35509204-cb2d-43a6-8e80-e6e06e0acb91-00-erbwws564kju.janeway.repl.co',
+  'd9f63266-31c0-4541-bd32-dd3c7ceeb503-00-3ixyne3eegosd.picard.repl.co',
                 ]
 
 
