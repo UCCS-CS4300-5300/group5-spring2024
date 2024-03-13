@@ -15,8 +15,6 @@ class Task(models.Model):
   name = models.CharField(max_length=100)
   difficulty = models.IntegerField()
   priority = models.IntegerField(default=0)
-  email = models.EmailField()
-  password = models.CharField(max_length=100)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
   points = models.IntegerField(default=0)
 
