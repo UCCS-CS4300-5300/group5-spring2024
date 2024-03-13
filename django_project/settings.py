@@ -35,13 +35,13 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.replit.dev", "https://*.replit.app", "https://*.repl.co"
 ]
 
-# Application definition 
+# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin', 'django.contrib.auth',
     'django.contrib.contenttypes', 'django.contrib.sessions',
     'django.contrib.messages', 'django.contrib.staticfiles',
-    'Task_Quest_App.Task_Quest_Config'
+    'Task_Quest_App.Task_Quest_Config',
 ]
 
 MIDDLEWARE = [
