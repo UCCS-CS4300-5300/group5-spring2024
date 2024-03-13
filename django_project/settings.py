@@ -24,24 +24,41 @@ SECRET_KEY = 'django-insecure-4ju2n@$f9d0c=h)_g0lbb%k9&@rf(xa$d$g$&5ri$uf)*gev^4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+X_FRAME_OPTIONS = '*'
+
+CSRF_TRUSTED_ORIGINS = ["https://*.replit.dev", "https://*.replit.app",  
+                        "https://67d5662a-c7e8-4c9b-ac03-60e655b701fe-00-byc1oevsdb9c.riker.repl.co"]
+
+
 ALLOWED_HOSTS = [
     ".replit.dev",
     ".replit.app",
     '35509204-cb2d-43a6-8e80-e6e06e0acb91-00-erbwws564kju.janeway.repl.co',
     'd9f63266-31c0-4541-bd32-dd3c7ceeb503-00-3ixyne3eegosd.picard.repl.co',
+    '67d5662a-c7e8-4c9b-ac03-60e655b701fe-00-byc1oevsdb9c.riker.repl.co'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.replit.dev", "https://*.replit.app", "https://*.repl.co"
-]
+    "https://*.replit.dev",
+    "https://*.replit.app",
+    "https://*.repl.co"
+    ]
 
-# Application definition
+
+# Application definition 
 
 INSTALLED_APPS = [
-    'django.contrib.admin', 'django.contrib.auth',
-    'django.contrib.contenttypes', 'django.contrib.sessions',
-    'django.contrib.messages', 'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     'Task_Quest_App.Task_Quest_Config',
+    'accounts',
+
+
 ]
 
 MIDDLEWARE = [
@@ -126,3 +143,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_REDIRECT_URL = "index"
+#LOGIN_REDIRECT_URL = "test-home"
+LOGOUT_REDIRECT_URL = "login"
