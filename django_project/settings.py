@@ -45,7 +45,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.repl.co"
     ]
 
-  
+
 # Application definition 
 
 INSTALLED_APPS = [
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Task_Quest_App.Task_Quest_Config',
     'accounts',
+
 
 ]
 
