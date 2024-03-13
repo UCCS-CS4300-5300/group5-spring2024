@@ -8,10 +8,11 @@ class TaskForm(ModelForm):
   
   class Meta:
     model = Task
-    fields = ['date', 'time', 'name', 'difficulty', 'priority']
+    fields = ['date', 'time', 'name', 'difficulty', 'priority', 'points']
     CHOICES = {"1": "1", "2": "2", "3": "3", "4": "4", "5": "5"}
     labels = {
         "name": _("Task Name"),
+        "points": _("Points"),
     }
     widgets = {
         "name" : forms.TextInput(attrs={'placeholder': 'Task Name'}),
