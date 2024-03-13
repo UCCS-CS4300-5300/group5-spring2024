@@ -4,8 +4,10 @@ from django import forms
 from django.forms import ModelForm
 from .models import Task
 
+
 class TaskForm(ModelForm):
-  
+  points = forms.IntegerField(min_value=0)
+
   class Meta:
     model = Task
     fields = ['date', 'time', 'name', 'difficulty', 'priority', 'points']
@@ -15,11 +17,16 @@ class TaskForm(ModelForm):
         "points": _("Points"),
     }
     widgets = {
-        "name" : forms.TextInput(attrs={'placeholder': 'Task Name'}),
-        "date" : forms.DateInput(attrs={'type': 'date'}),
-        "time" : forms.TimeInput(attrs={'type': 'time'}),
+        "name":
+        forms.TextInput(attrs={'placeholder': 'Task Name'}),
+        "date":
+        forms.DateInput(attrs={'type': 'date'}),
+        "time":
+        forms.TimeInput(attrs={'type': 'time'}),
         #"difficulty" : forms.RadioSelect(choices=CHOICES.items(), attrs={'type': 'inline-block'}),
-        "difficulty" : forms.Select(choices=CHOICES.items(), attrs={'type': 'number'}),
-        "priority" : forms.Select(choices=CHOICES.items())
-      #choice_field = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES)
+        "difficulty":
+        forms.Select(choices=CHOICES.items(), attrs={'type': 'number'}),
+        "priority":
+        forms.Select(choices=CHOICES.items())
+        #choice_field = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES)
     }
