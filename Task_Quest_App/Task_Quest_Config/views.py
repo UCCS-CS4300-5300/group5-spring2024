@@ -13,7 +13,7 @@ from .forms import *
 
 
  
-def index(request):
+def calendar(request):
 
   '''
   if request.method == 'POST':
@@ -37,7 +37,7 @@ def index(request):
   # Get the current month and year in a human-readable format
   current_month_year = datetime.today().strftime('%B %Y')
   # Render the template with the calendar and current month/year as context  variables
-  return render(request, 'Task_Quest_Config/index.html', {'calendar' : calendar, 'current_month_year': current_month_year})
+  return render(request, 'Task_Quest_Config/calendar.html', {'calendar' : calendar, 'current_month_year': current_month_year})
 
 
 '''This page doesn't work with the built-in webview since it uses an anonymous user. 
@@ -63,7 +63,7 @@ def create_task(request):
       # Set the user relationship
       task.user = request.user
       task.save()
-      # Redirect back to the index page
+      # Redirect back to the calendar page
       return redirect('task-list')
   context = {'form': form}
   return render(request, 'Task_Quest_Config/task_form.html', context)
