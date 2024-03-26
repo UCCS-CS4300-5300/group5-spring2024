@@ -76,7 +76,11 @@
                 <button class="btn btn-primary view-button" id="week-view">Week</button>
                 <button class="btn btn-primary view-button active" id="month-view">Month</button>
             </div>
-            <a class="btn btn-success add-task" href="{% url 'add-task' %}"> + Add Task</a>
+            {% if user.is_authenticated %}
+                <a class="btn btn-success add-task" href="{% url 'add-task' %}"> + Add Task</a>
+            {% else %}
+                <a class="btn btn-success add-task" href="{% url 'login' %}">Log In to Add Task</a>
+            {% endif %}
         </div>
         <div class="calendar ">
             <!-- Calendar grid goes here -->

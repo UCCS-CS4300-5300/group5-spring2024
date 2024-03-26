@@ -10,9 +10,10 @@ from datetime import datetime
 from calendar import HTMLCalendar
 from .models import Task
 from .forms import *
+from django.contrib.auth.decorators import login_required
 
 
- 
+
 def calendar(request):
 
   '''
@@ -50,6 +51,8 @@ class TaskListView(generic.ListView):
     context['current_user'] = self.request.user.username
     return context
 
+
+@login_required
 def create_task(request):
   form = TaskForm
 
