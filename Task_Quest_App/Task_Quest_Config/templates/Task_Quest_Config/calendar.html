@@ -14,7 +14,7 @@
         .calendar-container {
             overflow-x: auto;        /* Enable horizontal scrolling if needed */
             margin-bottom: 300px;     /* Adjust as needed */
-            background-color: #808080;
+            background-color: #78cce2;
             box-shadow: 0 4px 8px rgba(0,0,0,.1);
             border-radius: .25rem; 
             padding: 0 15px; 
@@ -31,7 +31,7 @@
             border-collapse: collapse; /* Collapse borders for a consistent look */
         }
         .calendar td {
-            border: 1px solid #ddd; /* Add borders to table cells */
+            border: 1px solid #383e65; /* Add borders to table cells */
             padding: 50px; /* Adjust padding as needed */
             text-align: center; /* Center align cell content */
         }
@@ -46,7 +46,8 @@
             color: #fff;
         }
         .month-year {
-            color: #000;
+            color: #6287f8;
+            font-size: 40px
         }
         .day {
             border: 1px solid #b3d7ff; 
@@ -68,9 +69,9 @@
         </form>
         <p></p>
         <div class="header d-flex justify-content-between align-items-center mb-3">
-            <button class="btn btn-primary nav-button" id="prev">&#60; Prev</button>
+            <a href="{% url 'prev_month' prev_year prev_month %}" class="btn btn-primary nav-button">&#60; Prev</a>
             <span class="month-year h5 mb-0">{{ current_month_year }}</span>
-            <button class="btn btn-primary nav-button" id="next">Next &#62;</button>
+            <a href="{% url 'next_month' next_year next_month %}" class="btn btn-primary nav-button">Next &#62;</a>
             <div class="view-options">
                 <button class="btn btn-primary view-button" id="day-view">Day</button>
                 <button class="btn btn-primary view-button" id="week-view">Week</button>
@@ -82,7 +83,8 @@
                 <a class="btn btn-success add-task" href="{% url 'login' %}">Log In to Add Task</a>
             {% endif %}
         </div>
-        <div class="calendar ">
+        
+        <div class="calendar">
             <!-- Calendar grid goes here -->
             <table class="table table-bordered calendar">
                 <!-- Calendar grid content -->
