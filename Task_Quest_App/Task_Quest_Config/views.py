@@ -75,4 +75,6 @@ def create_task(request):
 
 @login_required
 def home_page(request):
-  return render(request, 'Task_Quest_Config/home.html')
+  top_tasks = Task.objects.filter(user=request.user)[:3]
+  context = {'top_tasks' : top_tasks}
+  return render(request, 'Task_Quest_Config/home.html', context)

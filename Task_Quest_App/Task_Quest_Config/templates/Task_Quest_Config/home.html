@@ -4,20 +4,34 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-5">
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Tasks To Do</h4>
         <ul class="list-group">
-          <li class="list-group-item">Task 1</li>
-          <li class="list-group-item">Task 2</li>
-          <li class="list-group-item">Task 3</li>
+          {% for task in top_tasks %}
+              <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>{{ task.name }}</div>
+                  <div>
+                    <small>{{ task.date | date:"N j, Y" }} | {{ task.time | date:"P" }}</small>
+                  </div>
+                </div>
+              </li>
+          {% empty %}
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>No Task to Show</div>
+                <a class="btn btn-success add-task" href="{% url 'add-task' %}"> + Add Task</a>
+              </div>
+            </li>            
+          {% endfor %}
         </ul>
-        <a href="#" class="btn btn-primary mt-3">View All Tasks</a>
+        <a href="{% url 'task-list' %}" class="btn btn-primary mt-3">View All Tasks</a>
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Points Gained</h4>
