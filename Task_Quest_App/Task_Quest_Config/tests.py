@@ -83,6 +83,7 @@ class TaskListIntegrationTest(APITestCase):
       self.assertContains(response, 'Assigned to: Joe')
 
 
+
 class GameIntegrationTest(APITestCase):
 
     #Establishes context for integration test
@@ -113,3 +114,29 @@ class GameIntegrationTest(APITestCase):
       # Assert the response status code and content
       self.assertEqual(response.status_code, 200)
       self.assertContains(response, 'Points: 321')
+
+class HomePageIntegrationTest(APITestCase):
+  # create test data
+  def setUp(self):
+    self.client = APIClient()
+    self.user = User.objects.create_user(username='TestUser', password="testPassword!")
+    self.client.login(username='TestUser', password='testPassword!')
+    self.task1 = Task.objects.create(user=self.user, name='Task 1', 
+                                     date='2024-03-30', time='13:45', 
+                                     difficulty=2, priority=3)
+    self.task2 = Task.objects.create(user=self.user, name='Task 2', 
+                                     date='2024-01-30',time='13:45', 
+                                     difficulty=2, priority=3)
+    self.task3 = Task.objects.create(user=self.user, name='Task 3', 
+                                     date='2024-01-30', time='13:45',
+                                     difficulty=2, priority=3)
+
+  def test_home_page_view(self):
+    response = self.client.get(reverse('home'))
+    self.assertEqual(response.status_code, 200)
+    self.assertTemplateUsed(response, 'Task_Quest_Config/home.html')
+    self.assertContains(response, 'Task 1')
+    self.assertContains(response, 'Task 2')
+    self.assertContains(response, 'Task 3')
+ 
+

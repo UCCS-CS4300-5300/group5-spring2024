@@ -10,9 +10,12 @@ from datetime import datetime
 from calendar import HTMLCalendar
 from .models import Task
 from .forms import *
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 
- 
+@login_required
+
 def calendar(request):
 
   '''
@@ -42,6 +45,7 @@ def calendar(request):
 
 '''This page doesn't work with the built-in webview since it uses an anonymous user. 
   Instead, use a new tab logged in as an admin user.'''
+@method_decorator(login_required, name='dispatch')
 class TaskListView(generic.ListView):
   model = Task
   def get_context_data(self, **kwargs):
@@ -50,6 +54,8 @@ class TaskListView(generic.ListView):
     context['current_user'] = self.request.user.username
     return context
 
+
+@login_required
 def create_task(request):
   form = TaskForm
 
@@ -68,6 +74,15 @@ def create_task(request):
   context = {'form': form}
   return render(request, 'Task_Quest_Config/task_form.html', context)
 
+
 def start_game(request):
   gameData = {'points': request.user.profile.total_points}
   return render(request, 'Task_Quest_Config/game.html', gameData)
+
+
+@login_required
+def home_page(request):
+  top_tasks = Task.objects.filter(user=request.user)[:3]
+  context = {'top_tasks' : top_tasks}
+  return render(request, 'Task_Quest_Config/home.html', context)
+
