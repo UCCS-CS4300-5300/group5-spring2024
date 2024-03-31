@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 
 
 @login_required
+
 def calendar(request):
 
   '''
@@ -52,6 +53,7 @@ class TaskListView(generic.ListView):
     context['task_list'] = Task.objects.filter(user=self.request.user)
     context['current_user'] = self.request.user.username
     return context
+
 
 @login_required
 def create_task(request):
