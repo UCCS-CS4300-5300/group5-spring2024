@@ -75,8 +75,14 @@ def create_task(request):
   return render(request, 'Task_Quest_Config/task_form.html', context)
 
 
+def start_game(request):
+  gameData = {'points': request.user.profile.total_points}
+  return render(request, 'Task_Quest_Config/game.html', gameData)
+
+
 @login_required
 def home_page(request):
   top_tasks = Task.objects.filter(user=request.user)[:3]
   context = {'top_tasks' : top_tasks}
   return render(request, 'Task_Quest_Config/home.html', context)
+
