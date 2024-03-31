@@ -71,6 +71,16 @@
             <div>Priority: {{ task.priority }}</div>
             <div>Difficulty: {{ task.difficulty }}</div>
             <div>Assigned to: {{ task.user.username }}</div>
+            <form method="post" action="{% url 'complete_task' task.id %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="task_id" value="{{ task.id }}">
+                <button type="submit" class="btn btn-success">Complete Task</button>
+            </form>
+            <form method="post" action="{% url 'remove_task' task.id %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="task_id" value="{{ task.id }}">
+                <button type="submit" class="btn btn-danger">Remove Task</button>
+            </form>
         </li>
         {% empty %}
         <li class="list-group-item">No tasks to show.</li>

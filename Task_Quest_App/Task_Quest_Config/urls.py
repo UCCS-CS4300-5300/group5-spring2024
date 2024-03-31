@@ -24,6 +24,8 @@ urlpatterns = [
   
   # Game page 
   path('game/', views.start_game, name='quest-game'),
+  path('complete-task/<int:task_id>/', views.complete_task, name='complete_task'),
+  path('remove-task/<int:task_id>/', views.remove_task, name='remove_task'),
 
 ]
 
