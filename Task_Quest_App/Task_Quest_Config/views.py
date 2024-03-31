@@ -67,3 +67,7 @@ def create_task(request):
       return redirect('task-list')
   context = {'form': form}
   return render(request, 'Task_Quest_Config/task_form.html', context)
+
+def start_game(request):
+  gameData = {'points': request.user.profile.total_points}
+  return render(request, 'Task_Quest_Config/game.html', gameData)
