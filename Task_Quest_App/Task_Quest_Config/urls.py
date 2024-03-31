@@ -7,7 +7,8 @@ from . import views
 
 urlpatterns = [
    
-  path('', views.calendar, name='calendar'),
+  path('', views.home_page, name='home'),
+  path('calendar/', views.calendar, name='calendar'),
   path('tasks/', views.TaskListView.as_view(), name='task-list'),
   path('addtask/', views.create_task, name='add-task')
 
