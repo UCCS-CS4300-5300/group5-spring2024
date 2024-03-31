@@ -1,69 +1,108 @@
-''' 
-Views for Pages of the TaskQuest Application 
-'''
-
-from django.http import HttpResponse
-from django.views import View, generic
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from django.utils.safestring import mark_safe
-from datetime import datetime
-from calendar import HTMLCalendar
+from .models import UserProfile  # Import UserProfile model
 from .models import Task
-from .forms import *
+from django.contrib.auth.decorators import login_required
 
 
- 
-def index(request):
-
-  '''
-  if request.method == 'POST':
-    form = TaskForm(request.POST)
-    if form.is_valid():
-      task = form.save(commit=False)
-      task.user= request.user
-      task.save()
-      return redirect('index')
-
-  else:
-    form = TaskForm()
-  '''
-  # Create an instance of HTMLCalendar
-  cal = HTMLCalendar()
-  
-  # Generate HTML for the current month's calendar
-  html_cal = cal.formatmonth(datetime.today().year, datetime.today().month,     withyear=True)
-  # Mark the HTML as safe to prevent autoescaping
-  calendar = mark_safe(html_cal)
-  # Get the current month and year in a human-readable format
-  current_month_year = datetime.today().strftime('%B %Y')
-  # Render the template with the calendar and current month/year as context  variables
-  return render(request, 'Task_Quest_Config/index.html', {'calendar' : calendar, 'current_month_year': current_month_year})
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')  # Redirect to home page after successful login
+    else:
+        form = AuthenticationForm()
+    return render(request, 'login.html', {'form': form})
 
 
-'''This page doesn't work with the built-in webview since it uses an anonymous user. 
-  Instead, use a new tab logged in as an admin user.'''
-class TaskListView(generic.ListView):
-  model = Task
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['task_list'] = Task.objects.filter(user=self.request.user)
-    context['current_user'] = self.request.user.username
-    return context
 
-def create_task(request):
-  form = TaskForm
+@login_required
+def home(request):
+      user_profile = None
 
-  if request.method == 'POST':
-    # Create a new dictionary with form data and movie_title
-    task_data = request.POST.copy()
-    form = TaskForm(task_data, request.FILES)
-    if form.is_valid():
-      # Save the form without committing to the database
-      task = form.save(commit=False)
-      # Set the user relationship
-      task.user = request.user
-      task.save()
-      # Redirect back to the index page
-      return redirect('task-list')
-  context = {'form': form}
-  return render(request, 'Task_Quest_Config/task_form.html', context)
+      try:
+          # Retrieve user profile if authenticated
+          if request.user.is_authenticated:
+              user_profile = UserProfile.objects.get(user=request.user)
+      except UserProfile.DoesNotExist:
+          pass
+
+      tasks = Task.objects.all()
+      completed_tasks = tasks.filter(completed=True)
+
+      total_points = completed_tasks.count() * 10  # Each completed task is worth 10 points
+
+      if tasks.exists():
+          completion_percentage = (completed_tasks.count() / tasks.count()) * 100
+      else:
+          completion_percentage = 0
+
+      # Get the username of the logged-in user
+      username = request.user.username if request.user.is_authenticated else None
+
+      # Pass the username, points, total_points, and completion_percentage to the template context
+      return render(request, 'home.html', {
+          'user_profile': user_profile,
+          'tasks': tasks,
+          'total_points': total_points,
+          'completion_percentage': completion_percentage,
+          'points': user_profile.points if user_profile else 0,
+          'username': username  # Pass the username to the template context
+      })
+
+
+
+
+def contact_us(request):
+    return render(request, 'contact_us.html')
+
+
+
+
+
+
+
+
+
+@login_required
+def todo_list(request):
+      user_profile = None
+
+      try:
+          # Retrieve user profile if authenticated
+          if request.user.is_authenticated:
+              user_profile = UserProfile.objects.get(user=request.user)
+      except UserProfile.DoesNotExist:
+          pass
+
+      tasks = Task.objects.all()
+      completed_tasks = tasks.filter(completed=True)
+
+      total_points = completed_tasks.count() * 10  # Each completed task is worth 10 points
+
+      if tasks.exists():
+          completion_percentage = (completed_tasks.count() / tasks.count()) * 100
+      else:
+          completion_percentage = 0
+
+      if request.method == 'POST':
+          # Handle form submission to mark tasks as completed
+          for task in tasks:
+              task_id = request.POST.get('task_id_' + str(task.id))
+              task_complete = request.POST.get('task_' + str(task.id), False)
+
+              if task_id and task_complete:
+                  task.completed = True
+                  task.save()
+
+          # Render the todo_list.html template instead of redirecting to home
+          return render(request, 'todo_list.html', {'user_profile': user_profile, 'tasks': tasks, 'total_points': total_points, 'completion_percentage': completion_percentage, 'points': user_profile.points if user_profile else 0})
+
+      # Pass the points, total_points, and completion_percentage to the template context
+      return render(request, 'todo_list.html', {'user_profile': user_profile, 'tasks': tasks, 'total_points': total_points, 'completion_percentage': completion_percentage, 'points': user_profile.points if user_profile else 0})

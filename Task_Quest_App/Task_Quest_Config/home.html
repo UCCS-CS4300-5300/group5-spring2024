@@ -1,0 +1,60 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Center align the welcome message and points */
+        .center {
+            text-align: center;
+        }
+
+        /* Add background image */
+        body {
+            background-image: url("{% static 'css/image/black.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Ensure the background image remains fixed */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
+
+        /* Add background color with transparency to container */
+        .container {
+            background-color: rgba(255, 255, 255, 0.7); /* Adjust transparency as needed */
+            padding: 20px; /* Add padding to the container */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+      <nav>
+          <ul>
+              <li><a href="{% url 'home' %}">Home</a></li>
+              <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+              <li><a href="{% url 'todo_list' %}">Todo List</a></li> <!-- Correct URL for todo list -->
+          </ul>
+      </nav>
+        <section>
+            <div style="text-align: center;">
+            <h1>Get points after finishing each task in the to do list:</h1>
+            </div>
+        </section>
+        <!-- Center-aligned welcome message, points, and completion percentage -->
+      <div class="center">
+          {% if username %}
+              <p>Welcome, {{ username }}</p>
+          {% else %}
+              <p>Welcome</p>
+          {% endif %}
+          <p>Points: {{ total_points }}</p>
+          <p>Completion Percentage: {{ completion_percentage }}%</p>
+      </div>
+    </div>
+</body>
+</html>

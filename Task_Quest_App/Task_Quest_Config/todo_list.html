@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+
+  <header>
+      <nav>
+          <ul>
+              <li><a href="{% url 'home' %}">Home</a></li>
+              <li><a href="{% url 'contact_us' %}">Contact Us</a></li>
+              <li><a href="{% url 'todo_list' %}">Todo List</a></li> <!-- Correct URL for todo list -->
+          </ul>
+      </nav>
+  </header>
+  
+<body>
+    <div class="container">
+        <header>
+            <h1>Todo List</h1>
+        </header>
+        <form method="post">
+            {% csrf_token %}
+            <ul>
+                {% for task in tasks %}
+                    <li>
+                        <input type="checkbox" name="task_{{ task.id }}" {% if task.completed %}checked{% endif %}>
+                        <label>{{ task.title }}</label>
+                        <input type="hidden" name="task_id_{{ task.id }}" value="{{ task.id }}">
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Mark Complete</button>
+        </form>
+        <p>Total Points: {{ total_points }}</p>
+        <p>Completion Percentage: {{ completion_percentage }}%</p>
+    </div>
+</body>
+</html>

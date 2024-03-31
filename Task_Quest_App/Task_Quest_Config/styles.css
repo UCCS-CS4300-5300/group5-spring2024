@@ -1,0 +1,103 @@
+/* styles.css */
+
+/* Body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+/* Header */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Navigation menu */
+nav {
+    background-color: #444;
+    padding: 10px 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* User profile */
+.user-profile {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.user-profile p {
+    margin: 0;
+}
+
+/* Points section */
+.points {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.points h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.points p {
+    margin: 0;
+}
+
+/* Task section */
+.tasks {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tasks h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.tasks ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tasks li {
+    margin-bottom: 10px;
+}
