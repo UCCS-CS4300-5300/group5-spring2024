@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from django.views import View, generic
 from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
-from datetime import datetime
+from django.urls import reverse
+from datetime import datetime, timedelta
 from calendar import HTMLCalendar
 from .models import Task
 from .forms import *
@@ -18,35 +19,60 @@ from .models import Profile
 
 
 @login_required
-def calendar(request):
-  '''
-  if request.method == 'POST':
-    form = TaskForm(request.POST)
-    if form.is_valid():
-      task = form.save(commit=False)
-      task.user= request.user
-      task.save()
-      return redirect('index')
+def calendar(request, year=None, month=None):
+  # Get the current date
+  current_date = datetime.today()
 
+  # If year and month parameters are provided in the URL, use them; otherwise, use the current date
+  if year and month:
+      try:
+          year = int(year)
+          month = int(month)
+      except ValueError:
+          year = current_date.year
+          month = current_date.month
   else:
-    form = TaskForm()
-  '''
+      year = current_date.year
+      month = current_date.month
+
+  # Calculate previous month and year
+  prev_month_date = current_date.replace(year=year, month=month, day=1) - timedelta(days=1)
+  prev_year = prev_month_date.year
+  prev_month = prev_month_date.month
+
+  # Calculate next month and year
+  next_month_date = current_date.replace(year=year, month=month, day=28) + timedelta(days=4)
+  next_year = next_month_date.year
+  next_month = next_month_date.month
+
   # Create an instance of HTMLCalendar
   cal = HTMLCalendar()
 
-  # Generate HTML for the current month's calendar
-  html_cal = cal.formatmonth(datetime.today().year,
-                             datetime.today().month,
-                             withyear=True)
+  # Generate HTML for the specified month's calendar
+  html_cal = cal.formatmonth(year, month, withyear=True)
+  
   # Mark the HTML as safe to prevent autoescaping
   calendar = mark_safe(html_cal)
+  
   # Get the current month and year in a human-readable format
-  current_month_year = datetime.today().strftime('%B %Y')
-  # Render the template with the calendar and current month/year as context  variables
+  current_month_year = datetime(year, month, 1).strftime('%B %Y')
+
   return render(request, 'Task_Quest_Config/calendar.html', {
       'calendar': calendar,
-      'current_month_year': current_month_year
+      'current_month_year': current_month_year,
+      'prev_month': prev_month,
+      'prev_year': prev_year,
+      'next_month': next_month,
+      'next_year': next_year,
   })
+
+def prev_month_view(request, year, month):
+    # Redirect to the previous month's calendar view
+    return redirect(reverse('calendar', kwargs={'year': year, 'month': month}))
+
+def next_month_view(request, year, month):
+    # Redirect to the next month's calendar view
+    return redirect(reverse('calendar', kwargs={'year': year, 'month': month}))
 
 
 '''This page doesn't work with the built-in webview since it uses an anonymous user. 
