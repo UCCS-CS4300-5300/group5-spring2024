@@ -12,12 +12,13 @@ from .models import Task
 from .forms import *
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from .models import Profile
 
 
 @login_required
-
 def calendar(request):
-
   '''
   if request.method == 'POST':
     form = TaskForm(request.POST)
@@ -32,22 +33,30 @@ def calendar(request):
   '''
   # Create an instance of HTMLCalendar
   cal = HTMLCalendar()
-  
+
   # Generate HTML for the current month's calendar
-  html_cal = cal.formatmonth(datetime.today().year, datetime.today().month,     withyear=True)
+  html_cal = cal.formatmonth(datetime.today().year,
+                             datetime.today().month,
+                             withyear=True)
   # Mark the HTML as safe to prevent autoescaping
   calendar = mark_safe(html_cal)
   # Get the current month and year in a human-readable format
   current_month_year = datetime.today().strftime('%B %Y')
   # Render the template with the calendar and current month/year as context  variables
-  return render(request, 'Task_Quest_Config/calendar.html', {'calendar' : calendar, 'current_month_year': current_month_year})
+  return render(request, 'Task_Quest_Config/calendar.html', {
+      'calendar': calendar,
+      'current_month_year': current_month_year
+  })
 
 
 '''This page doesn't work with the built-in webview since it uses an anonymous user. 
   Instead, use a new tab logged in as an admin user.'''
+
+
 @method_decorator(login_required, name='dispatch')
 class TaskListView(generic.ListView):
   model = Task
+
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['task_list'] = Task.objects.filter(user=self.request.user)
@@ -83,6 +92,39 @@ def start_game(request):
 @login_required
 def home_page(request):
   top_tasks = Task.objects.filter(user=request.user)[:3]
-  context = {'top_tasks' : top_tasks}
+  context = {'top_tasks': top_tasks}
   return render(request, 'Task_Quest_Config/home.html', context)
 
+
+@login_required
+def remove_task(request, task_id):
+  # Retrieve task from database
+  task = get_object_or_404(Task, id=task_id)
+
+  # Check if the task belongs to the current user
+  if task.user == request.user:
+    task.delete()
+    return redirect('task-list')
+  else:
+    # If the task doesn't belong to the current user just redirect to task list page
+    return redirect('task-list')
+
+
+@login_required
+def complete_task(request, task_id):
+  # Retrieve task from database
+  task = get_object_or_404(Task, id=task_id)
+
+  # Check if the task belongs to the current user
+  if task.user == request.user:
+    # Increment the points for the user
+    profile = Profile.objects.get(user=request.user)
+    profile.total_points += task.points
+    profile.save()
+
+    # Remove task and redirect back to task list
+    task.delete()
+    return redirect('task-list')
+  else:
+    # If the task doesn't belong to the current user just redirect to task list page
+    return redirect('task-list')
