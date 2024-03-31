@@ -5,41 +5,43 @@
 {% block content %}
 <div class="row">
   <div class="col-md-6 text-left">
-    <h1>Welcome to TaskQuest</h1>
+    <h2>Welcome to TaskQuest</h2>
     <p>Make your day-to-day tasks less mundane when going through the same routine!!!</p>
   </div> 
   <div class="col-md-6">
-    <h3>Create your free account</h3>
-    <form method="post">
-      <div class="form-group">
-        {% csrf_token %}
-        <div class="mb-6">
-          <label for="id_username" class="form-label">Username: </label>
-          <input type="text" class="form-control" name="username" maxlength="150" autocapitalize="none" autocomplete="username" autofocus required aria-describedby="id_username_helptext" id="id_username" placeholder="Enter Username">
-          <span class="help-block small">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+    <div class="task-form">
+      <h3>Create your free account</h3>
+      <form method="post">
+        <div class="form-group">
+          {% csrf_token %}
+          <div class="mb-6">
+            <label for="id_username" class="form-label">Username: </label>
+            <input type="text" class="form-control" name="username" maxlength="150" autocapitalize="none" autocomplete="username" autofocus required aria-describedby="id_username_helptext" id="id_username" placeholder="Enter Username">
+            <span class="help-block small">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+          </div>
+          <p></p>
+          <div class="mb-6">
+            <label for="id_password1" class="form-label">Password:</label>
+            <input type="password" class="form-control" name="password1" autocomplete="new-password" required aria-describedby="id_password1_helptext" id="id_password1" placeholder="Enter Password">
+            <span class="helptext small" id="id_password1_helptext">
+              <ul>
+                <li>Your password can’t be too similar to your other personal information.</li>
+                <li>Your password must contain at least 8 characters.</li>
+                <li>Your password can’t be a commonly used password.</li>
+                <li>Your password can’t be entirely numeric.</li>
+              </ul>
+            </div>
+          </span>
+          <div class="mb-6">
+            <label for="id_password2" class="form-label">Password confirmation:</label>
+            <input type="password" class="form-control" name="password2" autocomplete="new-password" required aria-describedby="id_password2_helptext" id="id_password2" placeholder="Comfirm Password">
+            <span class="help-block small">Enter the same password as before, for verification.</span>
+          </div>
         </div>
         <p></p>
-        <div class="mb-6">
-          <label for="id_password1" class="form-label">Password:</label>
-          <input type="password" class="form-control" name="password1" autocomplete="new-password" required aria-describedby="id_password1_helptext" id="id_password1" placeholder="Enter Password">
-          <span class="helptext small" id="id_password1_helptext">
-            <ul>
-              <li>Your password can’t be too similar to your other personal information.</li>
-              <li>Your password must contain at least 8 characters.</li>
-              <li>Your password can’t be a commonly used password.</li>
-              <li>Your password can’t be entirely numeric.</li>
-            </ul>
-          </div>
-        </span>
-        <div class="mb-6">
-          <label for="id_password2" class="form-label">Password confirmation:</label>
-          <input type="password" class="form-control" name="password2" autocomplete="new-password" required aria-describedby="id_password2_helptext" id="id_password2" placeholder="Comfirm Password">
-          <span class="help-block small">Enter the same password as before, for verification.</span>
-        </div>
-      </div>
-      <p></p>
-      <button type="submit" class="btn btn-primary">Create Account</button>
-    </form>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+      </form>
+    </div>
     <div class="footer-link">
       <a href="{% url 'login' %}">Already have an account? Sign In</a>
     </div>

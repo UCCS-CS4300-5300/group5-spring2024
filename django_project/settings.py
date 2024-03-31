@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -36,7 +37,8 @@ ALLOWED_HOSTS = [
     ".replit.app",
     '35509204-cb2d-43a6-8e80-e6e06e0acb91-00-erbwws564kju.janeway.repl.co',
     'd9f63266-31c0-4541-bd32-dd3c7ceeb503-00-3ixyne3eegosd.picard.repl.co',
-    '67d5662a-c7e8-4c9b-ac03-60e655b701fe-00-byc1oevsdb9c.riker.repl.co'
+    '67d5662a-c7e8-4c9b-ac03-60e655b701fe-00-byc1oevsdb9c.riker.repl.co',
+    '2baa4939-a35b-4234-b72b-fcebbbb70ee8-00-1zduaqgkgkjzi.janeway.repl.co'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -57,6 +59,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Task_Quest_App.Task_Quest_Config',
     'accounts',
+    'rest_framework',
+    #'coverage',
 
 
 ]
@@ -143,6 +147,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = "calendar"
-#LOGIN_REDIRECT_URL = "test-home"
+LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
+
+#STATIC_ROOT = os.path.join(BASE_DIR, '/Task_Quest_App/static/')
+STATICFILES_DIRS =[BASE_DIR / 'Task_Quest_App/static']
