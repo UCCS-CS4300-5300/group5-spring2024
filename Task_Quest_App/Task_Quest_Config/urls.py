@@ -12,7 +12,7 @@ urlpatterns = [
   # Home
   path('', views.home_page, name='home'),
   
-  # Calendar Views
+  # Varying Calendar Views
   path('calendar/', views.calendar, name='calendar'),  
   path('calendar/<int:year>/<int:month>/', views.calendar, name='calendar'),
   path('prev/<int:year>/<int:month>/', views.prev_month_view, name='prev_month'),
