@@ -97,7 +97,7 @@ window.addEventListener('load', function(){
   class Layer {}
   class Background {}
   class UI {
-    /*constructor(game){
+    constructor(game){
       this.game = game;
       this.fontSize = 25;
       this.fontFamily = 'Helvetica';
@@ -110,7 +110,7 @@ window.addEventListener('load', function(){
     draw(context){
       //context.font = this.fontSize + 'px ' + this.fontFamily;
       context.fillStyle = this.color;
-      for (let 1 = 0; i < this.game.ammo; i++){
+      for (let i = 0; i < this.game.ammo; i++){
         context.fillRect(20 + 5 * i, 50, 3, 20);
       }
       //context.textAlign = this.textAlign;
@@ -118,34 +118,34 @@ window.addEventListener('load', function(){
       //context.fillText('Score: ' + this.score, 10, 10);
       //context.fillText('Ammo: ' + this.ammo, 10, 40);
     }
-  }*/
+  }
   class Game {
     constructor(width, height){
       this.width = width;
       this.height = height;
       this.player = new Player(this);
       this.input = new InputHandler(this);
-      //this.ui = new UI(this);
+      this.ui = new UI(this);
       this.keys = [];
       this.ammo = 20;
       this.maxAmmo = 50;
       this.ammoTimer = 0;
       this.ammoInterval = 500;
     }
-    update(){
+    update(deltaTime){
       this.player.update();
-      /*if (this.ammoTimer > this.ammoInterval){
+      if (this.ammoTimer > this.ammoInterval){
         if (this.ammo < this.maxAmmo){
           this.ammo++;
         }
         this.ammoTimer = 0;
       } else {
         this.ammoTime += deltaTime;
-      }*/
+      }
     }
     draw(context){
       this.player.draw(context);
-      //this.ui.draw(context);
+      this.ui.draw(context);
     }
   }
 
@@ -155,7 +155,7 @@ window.addEventListener('load', function(){
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    game.update();
+    game.update(deltaTime);
     game.draw(ctx);
     requestAnimationFrame(animate);
   }
