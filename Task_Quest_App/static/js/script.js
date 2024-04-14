@@ -30,7 +30,7 @@ window.addEventListener('load', function(){
   class Projectile {  // class to create and handle projectiles
     constructor(game, x, y){
       this.game = game; 
-      this.x = x;
+      this.x = x + this.game.player.width * 0.5;
       this.y = y;
       this.width = 5;
       this.height = 15;
@@ -42,8 +42,8 @@ window.addEventListener('load', function(){
       if (this.y < this.game.height * 0.1) this.markedForDeletion = true;
     }
     draw(context){
-      context.fillStyle = 'red';
-      context.fillRect((this.x + this.game.player.width * 0.5), this.y, this.width, this.height)
+      context.fillStyle = 'lime';
+      context.fillRect((this.x), this.y, this.width, this.height)
     }
   }
   class Particle {  // class to create and handle particles
@@ -93,7 +93,37 @@ window.addEventListener('load', function(){
       }
     }
   }
-  class Enemy {}
+  class Enemy {
+    constructor(game){
+      this.game = game;
+      this.y = 0;
+      this.speedY = Math.random() * 1.5 + 0.5;
+      this.markedForDeletion = false;
+      this.lives = 5;
+      this.score = this.lives;
+    }
+    update(){
+      this.y += this.speedY;
+      if (this.y + this.height < 0) this.markedForDeletion = true;
+    }
+    draw(context){
+      context.fillStyle = 'red';
+      context.fillRect(this.x, this.y, this.width, this.height);
+      context.fillStyle = 'black';
+      context.font = '20px Arial';
+      context.fillText(this.lives, this.x, this.y);
+    }
+  }
+  class Fighter extends Enemy {
+    constructor(game){
+      super(game);
+      this.width = 20;
+      this.height = 20;
+      this.x = Math.random() * (this.game.width * 0.9 - this.width);
+    }
+  }
+
+  
   class Layer {}
   class Background {}
   class UI {
@@ -101,7 +131,7 @@ window.addEventListener('load', function(){
       this.game = game;
       this.fontSize = 25;
       this.fontFamily = 'Helvetica';
-      this.color = 'white';
+      this.color = 'lime';
       //this.textAlign = 'left';
       //this.textBaseline = 'top';
       //this.score = 0;
@@ -127,30 +157,83 @@ window.addEventListener('load', function(){
       this.input = new InputHandler(this);
       this.ui = new UI(this);
       this.keys = [];
+      this.enemies = [];
+      this.enemyTimer = 0;
+      this.enemyInterval = 1000;
       this.ammo = 20;
       this.maxAmmo = 50;
       this.ammoTimer = 0;
       this.ammoInterval = 500;
+      this.score = 0;
+      this.gameOver = false;
     }
+    
     update(deltaTime){
       this.player.update();
+      
       if (this.ammoTimer > this.ammoInterval){
         if (this.ammo < this.maxAmmo){
           this.ammo++;
         }
         this.ammoTimer = 0;
       } else {
-        this.ammoTime += deltaTime;
+        this.ammoTimer += deltaTime;
+      }
+      
+      this.enemies.forEach(enemy => {
+        enemy.update();
+        if (this.checkCollision(this.player, enemy)){
+          enemy.markedForDeletion = true;
+        }
+        
+        this.player.projectiles.forEach(projectile => {
+          if (this.checkCollision(projectile, enemy)) {
+            enemy.lives--;
+            projectile.markedForDeletion = true;
+            if (enemy.lives <= 0){
+              enemy.markedForDeletion = true;
+              this.score += enemy.score;
+            }
+          }
+        });
+      });
+      
+      this.enemies = this.enemies.filter(enemy => !enemy.markedForDeletion);
+      
+      if (this.enemyTimer > this.enemyInterval && !this.gameOver){
+        this.addEnemy();
+        this.enemyTimer = 0;
+      } else {
+        this.enemyTimer += deltaTime;
       }
     }
+    
     draw(context){
       this.player.draw(context);
+      
       this.ui.draw(context);
+
+      this.enemies.forEach(enemy => {
+        enemy.draw(context);
+      });
+    }
+
+    addEnemy(){
+      this.enemies.push(new Fighter(this));
+    }
+
+    checkCollision(rect1, rect2){
+      return (rect1.x < rect2.x + rect2.width &&
+              rect1.x + rect1.width > rect2.x &&
+              rect1.y < rect2.y + rect2.height &&
+              rect1.height + rect1.y > rect2.y);
     }
   }
 
   const game = new Game(canvas.width, canvas.height);
+  
   let lastTime = 0;
+  
   function animate(timeStamp){
     const deltaTime = timeStamp - lastTime;
     lastTime = timeStamp;
@@ -159,5 +242,6 @@ window.addEventListener('load', function(){
     game.draw(ctx);
     requestAnimationFrame(animate);
   }
+  
   animate(0);
 });
