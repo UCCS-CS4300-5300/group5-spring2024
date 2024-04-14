@@ -16,6 +16,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
 from .models import Profile
+from django.core.serializers import serialize
+import json
 
 
 @login_required
@@ -118,7 +120,10 @@ def start_game(request):
 @login_required
 def home_page(request):
   top_tasks = Task.objects.filter(user=request.user)[:3]
-  context = {'top_tasks': top_tasks}
+  points =  Profile.objects.get(user=request.user)
+  serialized_tasks = serialize('json', top_tasks) 
+  context = {'top_tasks': top_tasks, 'total_points' : points.total_points, 
+             'serialized_tasks': serialized_tasks}
   return render(request, 'Task_Quest_Config/home.html', context)
 
 
