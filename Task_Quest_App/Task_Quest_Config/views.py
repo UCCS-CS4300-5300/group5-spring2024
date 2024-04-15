@@ -2,79 +2,101 @@
 Views for Pages of the TaskQuest Application 
 '''
 
-from django.http import HttpResponse
-from django.views import View, generic
 from django.shortcuts import render, redirect
-from django.utils.safestring import mark_safe
-from django.urls import reverse
-from datetime import datetime, timedelta
+from datetime import datetime
 from calendar import HTMLCalendar
 from .models import Task
-from .forms import *
+from .forms import TaskForm
+from django.views import generic  # Add this import
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
 from .models import Profile
+
 from django.core.serializers import serialize
 import json
+
+from dateutil.relativedelta import relativedelta
 
 
 @login_required
 def calendar(request, year=None, month=None):
-  # Get the current date
-  current_date = datetime.today()
+    current_date = datetime.today()
+    if year and month:
+        try:
+            year = int(year)
+            month = int(month)
+        except ValueError:
+            year = current_date.year
+            month = current_date.month
+    else:
+        year = current_date.year
+        month = current_date.month
 
-  # If year and month parameters are provided in the URL, use them; otherwise, use the current date
-  if year and month:
-      try:
-          year = int(year)
-          month = int(month)
-      except ValueError:
-          year = current_date.year
-          month = current_date.month
-  else:
-      year = current_date.year
-      month = current_date.month
+    # Calculate the previous month
+    prev_month_date = current_date.replace(year=year, month=month, day=1) - relativedelta(months=0)
+    prev_year = prev_month_date.year
+    prev_month = prev_month_date.month
 
-  # Calculate previous month and year
-  prev_month_date = current_date.replace(year=year, month=month, day=1) - timedelta(days=1)
-  prev_year = prev_month_date.year
-  prev_month = prev_month_date.month
+    # Calculate the next month
+    next_month_date = current_date.replace(year=year, month=month, day=1) + relativedelta(months=0)
+    next_year = next_month_date.year
+    next_month = next_month_date.month
 
-  # Calculate next month and year
-  next_month_date = current_date.replace(year=year, month=month, day=28) + timedelta(days=4)
-  next_year = next_month_date.year
-  next_month = next_month_date.month
+    # Generate the HTML for the calendar
+    cal = HTMLCalendar()
+    html_cal = cal.formatmonth(year, month, withyear=True)
 
-  # Create an instance of HTMLCalendar
-  cal = HTMLCalendar()
+    # Get the list of days in the month
+    days = cal.itermonthdays(year, month)
 
-  # Generate HTML for the specified month's calendar
-  html_cal = cal.formatmonth(year, month, withyear=True)
-  
-  # Mark the HTML as safe to prevent autoescaping
-  calendar = mark_safe(html_cal)
-  
-  # Get the current month and year in a human-readable format
-  current_month_year = datetime(year, month, 1).strftime('%B %Y')
+    # Create a list to hold the calendar days and associated tasks
+    calendar_days = []
 
-  return render(request, 'Task_Quest_Config/calendar.html', {
-      'calendar': calendar,
-      'current_month_year': current_month_year,
-      'prev_month': prev_month,
-      'prev_year': prev_year,
-      'next_month': next_month,
-      'next_year': next_year,
-  })
+    # Query tasks for the current month and year
+    tasks = Task.objects.filter(user=request.user, date__year=year, date__month=month)
+
+    # Loop through the days of the month and create a dictionary for each day
+    for day in days:
+        day_tasks = tasks.filter(date__day=day)
+        calendar_days.append({'day_number': day, 'tasks': day_tasks, 'is_today': day == current_date.day})
+
+    # Pass the current month and year to the template
+    current_month_year = datetime(year, month, 1).strftime('%B %Y')
+
+    return render(request, 'Task_Quest_Config/calendar.html', {
+        'calendar': html_cal,
+        'current_month_year': current_month_year,
+        'prev_month': prev_month,
+        'prev_year': prev_year,
+        'next_month': next_month,
+        'next_year': next_year,
+        'calendar_days': calendar_days,
+    })
+
+from django.urls import reverse
 
 def prev_month_view(request, year, month):
-    # Redirect to the previous month's calendar view
-    return redirect(reverse('calendar', kwargs={'year': year, 'month': month}))
+  # Calculate the previous month's year and month
+  prev_year = int(year)
+  prev_month = int(month) - 1
+  if prev_month == 0:
+      prev_month = 12
+      prev_year -= 1
+
+  # Redirect to the previous month's calendar view
+  return redirect(reverse('calendar', kwargs={'year': prev_year, 'month': prev_month}))
 
 def next_month_view(request, year, month):
-    # Redirect to the next month's calendar view
-    return redirect(reverse('calendar', kwargs={'year': year, 'month': month}))
+  # Calculate the next month's year and month
+  next_year = int(year)
+  next_month = int(month) + 1
+  if next_month == 13:  # If next month is December, reset to January of the next year
+      next_month = 1
+      next_year += 1
+
+  # Redirect to the next month's calendar view
+  return redirect(reverse('calendar', kwargs={'year': next_year, 'month': next_month}))
 
 
 '''This page doesn't work with the built-in webview since it uses an anonymous user. 
@@ -117,14 +139,17 @@ def start_game(request):
   return render(request, 'Task_Quest_Config/game.html', gameData)
 
 
+
 @login_required
 def home_page(request):
+  
   top_tasks = Task.objects.filter(user=request.user)[:3]
   points =  Profile.objects.get(user=request.user)
   serialized_tasks = serialize('json', top_tasks) 
   context = {'top_tasks': top_tasks, 'total_points' : points.total_points, 
              'serialized_tasks': serialized_tasks}
   return render(request, 'Task_Quest_Config/home.html', context)
+
 
 
 @login_required
@@ -143,19 +168,19 @@ def remove_task(request, task_id):
 
 @login_required
 def complete_task(request, task_id):
-  # Retrieve task from database
-  task = get_object_or_404(Task, id=task_id)
+    # Retrieve task from database
+    task = get_object_or_404(Task, id=task_id)
 
-  # Check if the task belongs to the current user
-  if task.user == request.user:
-    # Increment the points for the user
-    profile = Profile.objects.get(user=request.user)
-    profile.total_points += task.points
-    profile.save()
+    # Check if the task belongs to the current user
+    if task.user == request.user:
+        # Increment the points for the user
+        profile = Profile.objects.get(user=request.user)
+        profile.total_points += task.points
+        profile.save()
 
-    # Remove task and redirect back to task list
-    task.delete()
-    return redirect('task-list')
-  else:
-    # If the task doesn't belong to the current user just redirect to task list page
-    return redirect('task-list')
+        # Remove task and redirect back to home page
+        task.delete()
+        return redirect('home')  # Redirect to the home page
+    else:
+        # If the task doesn't belong to the current user just redirect to task list page
+        return redirect('task-list')
