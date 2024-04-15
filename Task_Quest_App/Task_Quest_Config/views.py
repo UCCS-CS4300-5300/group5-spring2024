@@ -12,7 +12,12 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from .models import Profile
+
+from django.core.serializers import serialize
+import json
+
 from dateutil.relativedelta import relativedelta
+
 
 @login_required
 def calendar(request, year=None, month=None):
@@ -137,20 +142,13 @@ def start_game(request):
 
 @login_required
 def home_page(request):
-    # Retrieve top tasks for the current user
-    top_tasks = Task.objects.filter(user=request.user)[:3]
-
-    # Retrieve total points gained by the user
-    total_points = request.user.profile.total_points
-
-    # Pass top tasks and total points to the context
-    context = {
-        'top_tasks': top_tasks,
-        'total_points': total_points,
-    }
-
-    # Render the home page with the context
-    return render(request, 'Task_Quest_Config/home.html', context)
+  
+  top_tasks = Task.objects.filter(user=request.user)[:3]
+  points =  Profile.objects.get(user=request.user)
+  serialized_tasks = serialize('json', top_tasks) 
+  context = {'top_tasks': top_tasks, 'total_points' : points.total_points, 
+             'serialized_tasks': serialized_tasks}
+  return render(request, 'Task_Quest_Config/home.html', context)
 
 
 
