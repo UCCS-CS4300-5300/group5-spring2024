@@ -236,9 +236,9 @@ window.addEventListener('load', function(){
       this.score = 0;
       this.gameOver = false;
       this.score = 0;
-      this.winningScore = 1;
+      this.winningScore = 30;
       this.gameTime = 0;
-      this.timeLimit = 5000;
+      this.timeLimit = 20000;
       this.speed = 1;
     }
     
