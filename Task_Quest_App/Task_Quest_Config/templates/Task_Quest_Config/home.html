@@ -27,7 +27,10 @@
             </li>            
           {% endfor %}
         </ul>
-        <a href="{% url 'task-list' %}" class="btn btn-primary mt-3">View All Tasks</a>
+        <div class="d-flex justify-content-between mt-3">
+          <a href="{% url 'task-list' %}" class="btn btn-primary">View All Tasks</a>
+          <a href="{% url 'add-task' %}" class="btn btn-success"> + Add Task</a>
+        </div>
       </div>
     </div>
   </div>
@@ -35,7 +38,7 @@
     <div class="card">
       <div class="card-body">
         <h4 class="card-title">Points Gained</h4>
-        <p class="card-text">Total Points: 10,000</p>
+        <p class="card-text">Total Points: {{ total_points }}</p>
         <p class="card-text">Level: Beginner</p>
       </div>
     </div>
@@ -57,5 +60,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
