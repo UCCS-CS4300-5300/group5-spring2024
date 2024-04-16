@@ -12,3 +12,7 @@
   transform: translate(-50%, -50%);
   background: #4d79bc;
 }
+
+#layer1, #Player, #Fighter{
+  display: none;
+}
