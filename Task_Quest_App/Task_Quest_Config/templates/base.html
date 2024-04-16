@@ -57,6 +57,9 @@
             <li class="nav-item {% if request.resolver_match.url_name == 'add-task' %}active{% endif %}">
               <a class="nav-link" href="{% url 'shop' %}">Shop</a>
             </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'quest-game' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'quest-game' %}">Quest Game</a>
+            </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Hi {{ user.username }}!
