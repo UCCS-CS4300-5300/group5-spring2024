@@ -1,41 +1,65 @@
-{% extends "base.html" %}
+  {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
-{% block page_css %}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.css" />
-{% endblock %}
+  {% block title %}Home{% endblock %}
+  {% block page_css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.css" />
+  {% endblock %}
 
-{% block content %}
-<div class="row">
-  <div class="col-md-8">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title"><b>Top Tasks To Do</b></h4>
-        <div id="display-tasks-donut-chart"></div>   
-      </div>
-      <div class="card-body">
-        <ul class="list-group">
-          {% for task in top_tasks %}
-              <li class="list-group-item">                
-                <div><b>{{ task.name }} </b></div>                
-                <div class="d-flex justify-content-between align-items-center">
-                  <small> points: {{ task.points }} </small>
-                  <div>
-                    <small>  {{ task.date | date:"N j, Y" }} | {{ task.time | date:"P" }}</small>
+  {% block content %}
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title"><b>Top Tasks To Do</b></h4>
+          <div id="display-tasks-donut-chart"></div>   
+        </div>
+        <div class="card-body">
+          <ul class="list-group">
+            {% for task in top_tasks %}
+                <li class="list-group-item">                
+                  <div><b>{{ task.name }} </b></div>                
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small> points: {{ task.points }} </small>
+                    <div>
+                      <small>  {{ task.date | date:"N j, Y" }} | {{ task.time | date:"P" }}</small>
+                    </div>
                   </div>
+                </li>
+            {% empty %}
+              <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>No Task to Show</div>                
                 </div>
-              </li>
-          {% empty %}
-            <li class="list-group-item">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>No Task to Show</div>                
-              </div>
-            </li>            
-          {% endfor %}
-        </ul>
-        <div class="d-flex justify-content-between mt-3">
-          <a href="{% url 'task-list' %}" class="btn btn-primary">View All Tasks</a>
-          <a href="{% url 'add-task' %}" class="btn btn-success"> + Add Task</a>
+              </li>            
+            {% endfor %}
+          </ul>
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="{% url 'task-list' %}" class="btn btn-primary mt-3">View All Tasks</a>
+            <a href="{% url 'add-task' %}" class="btn btn-success add-task mt-3"  > + Add Task</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Points Gained</h4>
+          <p class="card-text">Total Points: {{ total_points }}</p>
+          <p class="card-text">Level: Beginner</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">User Profile</h4>
+          <p class="card-text">Username: {{ user.username }}</p>
+          <p class="card-text">Email: {{ user.email }}</p>
+          <div class="d-flex justify-content-between align-items-center text-right">
+            <a href="#" class="btn btn-outline-primary">Edit Profile</a>
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button class="btn btn-outline-danger" type="submit">Log Out</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -75,41 +99,42 @@
 </div>
 {% endblock %}
 
-{% block page_js %}
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
-  <script>
-    // get the top task from the database
-    var tasksJson = JSON.parse('{{ serialized_tasks|escapejs }}');
-    var variableColumn = [];
-    //creat a list of tasks
-    tasksJson.forEach(function(task) {
-        var taskInfo = task.fields;
-        variableColumn.push([taskInfo.name, taskInfo.points]);
-    });
-    //plot the chart
-    let chart = bb.generate({
-      data: {
-        columns: variableColumn,
-        type: "donut",
-        onclick: function (d, i) {
-          console.log("onclick", d, i);
+
+  {% block page_js %}
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/billboard.js/dist/billboard.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
+    <script>
+      // get the top task from the database
+      var tasksJson = JSON.parse('{{ serialized_tasks|escapejs }}');
+      var variableColumn = [];
+      //creat a list of tasks
+      tasksJson.forEach(function(task) {
+          var taskInfo = task.fields;
+          variableColumn.push([taskInfo.name, taskInfo.points]);
+      });
+      //plot the chart
+      let chart = bb.generate({
+        data: {
+          columns: variableColumn,
+          type: "donut",
+          onclick: function (d, i) {
+            console.log("onclick", d, i);
+          },
+          onover: function (d, i) {
+            console.log("onover", d, i);
+          },
+          onout: function (d, i) {
+            console.log("onout", d, i);
+          },
         },
-        onover: function (d, i) {
-          console.log("onover", d, i);
+        donut: {
+          title: "Tasks To Do",
         },
-        onout: function (d, i) {
-          console.log("onout", d, i);
-        },
-      },
-      donut: {
-        title: "Tasks To Do",
-      },
-      bindto: "#display-tasks-donut-chart",
-    });
-  </script>
-{% endblock %}
+        bindto: "#display-tasks-donut-chart",
+      });
+    </script>
+  {% endblock %}
 
