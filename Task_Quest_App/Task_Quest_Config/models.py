@@ -35,3 +35,20 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+class Item(models.Model):
+  name = models.CharField(max_length=100)
+  cost = models.IntegerField(default=0)
+  description = models.TextField()
+  image = models.ImageField(upload_to='item_images/',       default='item_images/default.jpg')
+
+  def __str__(self):
+      return self.name
+
+class PurchasedItem(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  item = models.ForeignKey(Item, on_delete=models.CASCADE)
+  purchase_date = models.DateTimeField(auto_now_add=True)
+
+  def __str__(self):
+      return f'{self.user.username} purchased {self.item.name}'

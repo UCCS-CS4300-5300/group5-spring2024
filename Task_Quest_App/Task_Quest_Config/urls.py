@@ -28,6 +28,10 @@ urlpatterns = [
   path('complete-task/<int:task_id>/', views.complete_task, name='complete_task'),
   path('remove-task/<int:task_id>/', views.remove_task, name='remove_task'),
 
-]
+  # Points Shop page 
+  path('shop/', views.shop, name='shop'), 
+  path('buy-item/<int:item_id>/', views.buy_item, name='buy_item'),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #urlpatterns  +=  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
