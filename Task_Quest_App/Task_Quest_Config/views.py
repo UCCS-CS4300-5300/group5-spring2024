@@ -5,20 +5,21 @@ Views for Pages of the TaskQuest Application
 from django.shortcuts import render, redirect
 from datetime import datetime
 from calendar import HTMLCalendar
-from .models import Task
-from .forms import TaskForm
+from .models import *
+from .forms import *
 from django.views import generic  # Add this import
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from .models import Profile
-
 from dateutil.relativedelta import relativedelta
 
 from django.core.serializers import serialize
 import json
 
 from dateutil.relativedelta import relativedelta
+
+from django.contrib import messages
+
 
 
 
@@ -145,13 +146,17 @@ def start_game(request):
 
 @login_required
 def home_page(request):
-  
-  top_tasks = Task.objects.filter(user=request.user)[:3]
-  points =  Profile.objects.get(user=request.user)
-  serialized_tasks = serialize('json', top_tasks) 
-  context = {'top_tasks': top_tasks, 'total_points': points.total_points, 
-             'serialized_tasks': serialized_tasks}
-  return render(request, 'Task_Quest_Config/home.html', context)
+    top_tasks = Task.objects.filter(user=request.user)[:3]
+    points = Profile.objects.get(user=request.user)
+    purchased_items = PurchasedItem.objects.filter(user=request.user)  # Retrieve purchased items
+    serialized_tasks = serialize('json', top_tasks)
+    context = {
+        'top_tasks': top_tasks, 
+        'total_points': points.total_points,
+        'serialized_tasks': serialized_tasks,
+        'purchased_items': purchased_items  # Add to context
+    }
+    return render(request, 'Task_Quest_Config/home.html', context)
 
 
 @login_required
@@ -186,3 +191,30 @@ def complete_task(request, task_id):
     else:
         # If the task doesn't belong to the current user just redirect to task list page
         return redirect('task-list')
+
+@login_required
+def shop(request):
+    items = Item.objects.all()
+    return render(request, 'Task_Quest_Config/shop.html', {'items': items})
+
+@login_required
+def buy_item(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    profile = Profile.objects.get(user=request.user)
+
+    # Check if the item has already been purchased by the user
+    already_purchased = PurchasedItem.objects.filter(user=request.user, item=item).exists()
+
+    if already_purchased:
+        messages.error(request, f'You have already purchased {item.name}.')
+        return redirect('shop')
+
+    if profile.total_points >= item.cost:
+        profile.total_points -= item.cost
+        profile.save()
+        PurchasedItem.objects.create(user=request.user, item=item)  # Record the purchase
+        messages.success(request, f'You have successfully purchased {item.name}.')
+    else:
+        messages.error(request, 'Insufficient points to purchase this item.')
+
+    return redirect('shop')

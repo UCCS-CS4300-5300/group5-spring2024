@@ -65,6 +65,24 @@
     </div>
   </div>
 </div>
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Purchased Items</h4>
+        <ul class="list-group">
+          {% for purchase in purchased_items %}
+          <li class="list-group-item">
+            {{ purchase.item.name }} - Purchased on {{ purchase.purchase_date|date:"N j, Y" }}
+          </li>
+          {% empty %}
+          <li class="list-group-item">No items purchased yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 
