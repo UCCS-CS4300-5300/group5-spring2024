@@ -8,3 +8,7 @@ from .models import *
 admin.site.register(Task)
 admin.site.register(Profile)
 
+class ItemAdmin(admin.ModelAdmin):
+  list_display = ['name', 'cost', 'description', 'image']
+
+admin.site.register(Item, ItemAdmin)
