@@ -40,16 +40,18 @@
 
 
     .task-list-container {
-        background-color: #f0f8ff; 
-        border: 1px solid #b3d7ff; 
+        background-color: #565656; 
+        border: 1px solid #161616; 
     }
 
     .task-list-container h4 {
-        color: #007bff;
+        color: #ffffff;
     }
 
+    
+
     .task-list-container .list-group-item {
-        border-color: #b3d7ff; 
+        border-color: #161616; 
         background-color: #ffffff; 
     }
 </style>
@@ -71,6 +73,7 @@
             <div>Priority: {{ task.priority }}</div>
             <div>Difficulty: {{ task.difficulty }}</div>
             <div>Assigned to: {{ task.user.username }}</div>
+            <div><p></p></div>
             <form method="post" action="{% url 'complete_task' task.id %}" style="display: inline;">
                 {% csrf_token %}
                 <input type="hidden" name="task_id" value="{{ task.id }}">
