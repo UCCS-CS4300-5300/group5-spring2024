@@ -64,38 +64,6 @@
       </div>
     </div>
   </div>
-  <div class="col-md-3">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">Points Gained</h4>
-        <p class="card-text">Total Points: {{ total_points }}</p>
-        <p class="card-text">Level: Beginner</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">Points Gained</h4>
-        <p class="card-text">Total Points: {{ total_points }}</p>
-        <p class="card-text">Level: Beginner</p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">User Profile</h4>
-        <p class="card-text">Username: {{ user.username }}</p>
-        <p class="card-text">Email: {{ user.email }}</p>
-        <div class="d-flex justify-content-between align-items-center text-right">
-          <a href="#" class="btn btn-outline-primary">Edit Profile</a>
-          <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button class="btn btn-outline-danger" type="submit">Log Out</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 {% endblock %}
 
