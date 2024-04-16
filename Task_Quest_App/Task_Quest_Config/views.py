@@ -149,7 +149,7 @@ def home_page(request):
   top_tasks = Task.objects.filter(user=request.user)[:3]
   points =  Profile.objects.get(user=request.user)
   serialized_tasks = serialize('json', top_tasks) 
-  context = {'top_tasks': top_tasks, 'total_points' : points.total_points, 
+  context = {'top_tasks': top_tasks, 'total_points': points.total_points, 
              'serialized_tasks': serialized_tasks}
   return render(request, 'Task_Quest_Config/home.html', context)
 
