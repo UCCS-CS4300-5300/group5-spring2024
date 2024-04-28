@@ -186,6 +186,7 @@ window.addEventListener('load', function(){
       this.color = 'lime';
     }
     draw(context){      
+      context.save();
       //Ammo Counter
       context.fillStyle = this.color;
       for (let i = 0; i < this.game.ammo; i++){
@@ -195,6 +196,7 @@ window.addEventListener('load', function(){
       //Timer
       const formattedTime = (this.game.gameTime * 0.001).toFixed(1);
       context.fillText('Timer: ' + formattedTime, 20, 50);
+
       
       //Game Over Message
       if (this.game.gameOver){
@@ -216,6 +218,7 @@ window.addEventListener('load', function(){
         document.formName.inputName.value=5;
 
       }
+      context.restore();
     }
   }
 
