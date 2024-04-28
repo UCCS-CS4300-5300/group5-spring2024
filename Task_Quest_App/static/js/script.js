@@ -9,11 +9,11 @@ window.addEventListener('load', function(){
   class InputHandler {  // class for handling input
     constructor(game){
       this.game = game;
-      window.addEventListener('keydown', e => {  //If an arrow key is pressed
-        if ((   (e.key === 'ArrowUp') ||
-                (e.key === 'ArrowDown') ||
-                (e.key === 'ArrowLeft') ||
-                (e.key === 'ArrowRight')
+      window.addEventListener('keydown', e => {  //If an arrow key or wasd is pressed
+        if ((   (e.key === 'ArrowUp') || (e.key === 'w') ||
+                (e.key === 'ArrowDown') || (e.key === 's') ||
+                (e.key === 'ArrowLeft') || (e.key === 'a') ||
+                (e.key === 'ArrowRight') || (e.key === 'd')
              ) && this.game.keys.indexOf(e.key) === -1){  // for the first time
           this.game.keys.push(e.key);
         } else if (e.key === ' '){
@@ -66,12 +66,12 @@ window.addEventListener('load', function(){
     }
 
     update(){
-      if (this.game.keys.includes('ArrowUp')) this.speedY = -this.maxSpeed;
-      else if (this.game.keys.includes('ArrowDown')) this.speedY = this.maxSpeed;
+      if (this.game.keys.includes('ArrowUp') || this.game.keys.includes('w')) this.speedY = -this.maxSpeed;
+      else if (this.game.keys.includes('ArrowDown') || this.game.keys.includes('s')) this.speedY = this.maxSpeed;
       else this.speedY = 0;
 
-      if (this.game.keys.includes('ArrowLeft')) this.speedX = -this.maxSpeed;
-      else if (this.game.keys.includes('ArrowRight')) this.speedX = this.maxSpeed;
+      if (this.game.keys.includes('ArrowLeft') || this.game.keys.includes('a')) this.speedX = -this.maxSpeed;
+      else if (this.game.keys.includes('ArrowRight') || this.game.keys.includes('d')) this.speedX = this.maxSpeed;
       else this.speedX = 0;
       
       this.y += this.speedY;
