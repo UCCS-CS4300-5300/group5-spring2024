@@ -2,8 +2,8 @@ window.addEventListener('load', function(){
   // canvas setup
   const canvas = document.getElementById('canvas1');
   const ctx = canvas.getContext('2d');
-  canvas.width = 500;
-  canvas.height = 500;
+  canvas.width = 540;
+  canvas.height = 700;
 
   // game functions
   class InputHandler {  // class for handling input
@@ -56,8 +56,8 @@ window.addEventListener('load', function(){
       this.game = game;  //player variables 
       this.width = 52;
       this.height = 68;
-      this.x = 200;  
-      this.y = 400;
+      this.x = 250;  
+      this.y = 600;
       this.speedY = 0;
       this.speedX = 0;
       this.maxSpeed = 3;
@@ -209,9 +209,12 @@ window.addEventListener('load', function(){
           message2 = "Try Again!";
         }
         context.font = '50px ' + this.fontFamily;
-        context.fillText(message1, this.game.width * 0.5, this.game.height * 0.5 - 20);
+        context.fillText(message1, this.game.width * 0.5, this.game.height * 0.5 - 40);
         context.font = '25px ' + this.fontFamily;
-        context.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 20);
+        context.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 40);
+
+        document.formName.inputName.value=5;
+
       }
     }
   }

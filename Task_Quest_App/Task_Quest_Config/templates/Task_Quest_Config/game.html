@@ -11,6 +11,11 @@
     {% block content %}
     <label>Points: {{ points }}</label>
 
+    <form name='formName'>
+      <label> High Score: {{ inputName }}
+        <input type="text" name='inputName'>
+        </label>
+    </form>
 
 
     <canvas id="canvas1"></canvas>
@@ -23,6 +28,9 @@
 
 <!-- Environment -->
     <img id="layer1" src="{% static 'images/space.png' %}">
+
+<!-- Difficulty -->
+
     
     <script src="{% static 'js/script.js' %}"></script>
     {% endblock %}
