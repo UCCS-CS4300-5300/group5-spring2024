@@ -20,12 +20,6 @@ window.addEventListener('load', function(){
         else if (e.key === ' '){
           this.game.player.shootTop();
         }
-        else if (e.key === 'Shift' && this.game.refillPowerup){
-            this.game.player.refillAmmo();
-        }
-        else if (e.key === '/' && this.game.clearPowerup){
-            this.game.player.clearEnemies();
-        }
       });
       window.addEventListener('keyup', e => {
         if (this.game.keys.indexOf(e.key) > -1){  //If an arrow key is released
@@ -126,7 +120,6 @@ window.addEventListener('load', function(){
       this.lives = parseInt(document.getElementById('enemy-health').value) + this.game.difficulty;
       this.score = this.lives;
       this.bonusTime = 1;
-      this.image = document.getElementById('Fighter');
     }
 
     update(){
@@ -146,16 +139,51 @@ window.addEventListener('load', function(){
       //context.fillText(this.lives, this.x, this.y);
     }
   }
-  //Subclass of Enemy
+  //Subclasses of Enemy
   class Fighter extends Enemy {
     constructor(game){
       super(game);
       this.width = 87;
       this.height = 102;
       this.x = Math.random() * (this.game.width * 0.9 - this.width);
+      this.type = 'fighter';
+
+      this.image = document.getElementById('Fighter');
     }
   }
 
+  class Clearer extends Enemy{
+    constructor(game){
+      super(game);
+      this.width = 26;
+      this.height = 26;
+      this.lives = 1;
+      this.x = Math.random() * (this.game.width * 0.9 - this.width);
+      this.speedY = 6;
+      this.bonusTime = 0;
+      this.score = 0;
+      this.type = 'clear';
+
+      this.image = document.getElementById('Clear');
+    }
+  }
+
+    class Refiller extends Enemy{
+      constructor(game){
+        super(game);
+        this.width = 28;
+        this.height = 36;
+        this.lives = 1;
+        this.x = Math.random() * (this.game.width * 0.9 - this.width);
+        this.speedY = 4;
+        this.bonusTime = 0;
+        this.score = 0;
+        this.type = 'refill';
+
+        this.image = document.getElementById('Refill');
+      }
+  }
+  
 //Class to create and handle image layers  
   class Layer {
     constructor(game, image, speedModifier){
@@ -269,8 +297,6 @@ window.addEventListener('load', function(){
       this.speed = 1;
       this.difficultyTimer = 20000;
       this.difficulty = 0;
-      this.refillPowerup = true;
-      this.clearPowerup = true;
     }
     
     update(deltaTime){
@@ -301,6 +327,8 @@ window.addEventListener('load', function(){
         enemy.update();
         if (this.checkCollision(this.player, enemy)){
           enemy.markedForDeletion = true;
+          if (enemy.type === 'refill') this.player.refillAmmo();
+          else if (enemy.type === 'clear') this.player.clearEnemies();
           if (!this.gameOver) this.timeLimit -= enemy.bonusTime * 1000;
         }
 
@@ -347,7 +375,18 @@ window.addEventListener('load', function(){
 
     //Method to create a new enemy
     addEnemy(){
-      this.enemies.push(new Fighter(this));
+
+      const random = Math.floor(Math.random() * (26 - 1) + 1);
+      
+      if (random == 25){
+        this.enemies.push(new Refiller(this));
+      }
+      else if (random == 1){
+        this.enemies.push(new Clearer(this));
+      }
+      else{
+        this.enemies.push(new Fighter(this));
+      }
     }
 
     //Method to check for collision between two objects
