@@ -107,7 +107,7 @@ window.addEventListener('load', function(){
       this.y = 0;
       this.speedY = Math.random() * 1.5 + 0.5;
       this.markedForDeletion = false;
-      this.lives = 5;
+      this.lives = parseInt(document.getElementById('enemy-health').value);
       this.score = this.lives;
       this.bonusTime = 1;
       this.image = document.getElementById('Fighter');
@@ -246,7 +246,7 @@ window.addEventListener('load', function(){
       this.score = 0;
       this.winningScore = 30;
       this.gameTime = 0;
-      this.timeLimit = 20000;
+      this.timeLimit = parseInt(document.getElementById('starting-time').value);
       this.speed = 1;
     }
     

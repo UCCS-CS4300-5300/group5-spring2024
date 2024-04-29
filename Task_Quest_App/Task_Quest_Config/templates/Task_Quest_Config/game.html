@@ -16,7 +16,7 @@
         <input type="text" name='inputName' readonly>
         </label>
       {% csrf_token %}
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">Save</button>
     </form>
 
 
@@ -32,7 +32,12 @@
     <img id="layer1" src="{% static 'images/space.png' %}">
 
 <!-- Difficulty -->
-
+    <form>
+      <ul hidden>
+        <li><data value="3" id="enemy-health"></data></li>
+        <li><data value="60000" id="starting-time"></data></li>
+      </ul>
+    </form>
     
     <script src="{% static 'js/script.js' %}"></script>
     {% endblock %}
