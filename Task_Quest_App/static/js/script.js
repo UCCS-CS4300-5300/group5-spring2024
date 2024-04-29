@@ -115,7 +115,10 @@ window.addEventListener('load', function(){
 
     update(){
       this.y += this.speedY;
-      if (this.y + this.height < 0) this.markedForDeletion = true;
+      if (this.y + this.height > this.game.height){
+        this.markedForDeletion = true;
+        this.game.timeLimit -= this.bonusTime * 1000;
+      }
     }
 
     draw(context){
@@ -244,7 +247,7 @@ window.addEventListener('load', function(){
       this.score = 0;
       this.gameOver = false;
       this.score = 0;
-      this.winningScore = 30;
+      this.winningScore = parseInt(document.getElementById('target-score').value);;
       this.gameTime = 0;
       this.timeLimit = parseInt(document.getElementById('starting-time').value);
       this.speed = 1;
