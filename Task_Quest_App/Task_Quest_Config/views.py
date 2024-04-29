@@ -112,13 +112,25 @@ def create_task(request):
 
 def start_game(request):
   gameData = {'points': request.user.profile.total_points}
+  if request.method == 'POST':
+    # Create a new dictionary with form data and movie_title
+    game_data = request.POST.copy()
+    if float(game_data.get('inputName')) > request.user.profile.longest_game:
+      request.user.profile.longest_game = game_data.get('inputName')
+      request.user.profile.save()
+      
   return render(request, 'Task_Quest_Config/game.html', gameData)
 
 
 @login_required
 def home_page(request):
   top_tasks = Task.objects.filter(user=request.user)[:3]
-  context = {'top_tasks': top_tasks}
+  points = Profile.objects.get(user=request.user)
+  context = {
+      'top_tasks': top_tasks, 
+      'total_points': points.total_points,
+      'longest_game': points.longest_game
+  }
   return render(request, 'Task_Quest_Config/home.html', context)
 
 
