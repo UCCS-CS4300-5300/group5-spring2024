@@ -62,6 +62,7 @@ window.addEventListener('load', function(){
       this.speedX = 0;
       this.maxSpeed = 3;
       this.projectiles = [];
+      this.damage = parseInt(document.getElementById('player-damage').value)
       this.image = document.getElementById('Player');
     }
 
@@ -107,7 +108,7 @@ window.addEventListener('load', function(){
       this.y = 0;
       this.speedY = Math.random() * 1.5 + 0.5;
       this.markedForDeletion = false;
-      this.lives = parseInt(document.getElementById('enemy-health').value);
+      this.lives = parseInt(document.getElementById('enemy-health').value) + this.game.difficulty;
       this.score = this.lives;
       this.bonusTime = 1;
       this.image = document.getElementById('Fighter');
@@ -247,16 +248,21 @@ window.addEventListener('load', function(){
       this.score = 0;
       this.gameOver = false;
       this.score = 0;
-      this.winningScore = parseInt(document.getElementById('target-score').value);;
+      this.winningScore = parseInt(document.getElementById('target-score').value);
       this.gameTime = 0;
       this.timeLimit = parseInt(document.getElementById('starting-time').value);
       this.speed = 1;
+      this.difficultyTimer = 20000;
+      this.difficulty = 0;
     }
     
     update(deltaTime){
       //Tracks time since game started
       if (!this.gameOver) this.gameTime += deltaTime;
 
+      //Increases difficulty as game progresses
+      if (Math.floor(this.gameTime % this.difficultyTimer) < 20) this.difficulty++;
+      
       //Ends the game when time runs out
       if (this.gameTime > this.timeLimit) this.gameOver = true;
 
@@ -278,13 +284,13 @@ window.addEventListener('load', function(){
         enemy.update();
         if (this.checkCollision(this.player, enemy)){
           enemy.markedForDeletion = true;
-          this.timeLimit -= enemy.bonusTime * 1000;
+          if (!this.gameOver) this.timeLimit -= enemy.bonusTime * 1000;
         }
 
         //Handles enemy collisions with projectiles
         this.player.projectiles.forEach(projectile => {
           if (this.checkCollision(projectile, enemy)) {
-            enemy.lives--;
+            enemy.lives -= this.player.damage;
             projectile.markedForDeletion = true;
             if (enemy.lives <= 0){
               enemy.markedForDeletion = true;
@@ -292,7 +298,7 @@ window.addEventListener('load', function(){
                 this.score += enemy.score;
                 this.timeLimit += enemy.bonusTime * 1000;
               }
-              if (this.score > this.winningScore) this.gameOver = true;
+              //if (this.score > this.winningScore) this.gameOver = true;
             }
           }
         });
