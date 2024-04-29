@@ -26,6 +26,7 @@ class Task(models.Model):
 class Profile(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE)
   total_points = models.IntegerField(default=0)
+  longest_game = models.FloatField(default=0)
 
   def __str__(self):
     return self.user.username

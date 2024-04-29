@@ -11,10 +11,12 @@
     {% block content %}
     <label>Points: {{ points }}</label>
 
-    <form name='formName'>
+    <form name='formName' method="post" action="{% url 'quest-game' %}">
       <label> High Score: {{ inputName }}
         <input type="text" name='inputName'>
         </label>
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
 
