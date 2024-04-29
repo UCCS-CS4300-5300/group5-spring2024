@@ -109,6 +109,7 @@ window.addEventListener('load', function(){
       this.markedForDeletion = false;
       this.lives = 5;
       this.score = this.lives;
+      this.bonusTime = 1;
       this.image = document.getElementById('Fighter');
     }
 
@@ -195,7 +196,8 @@ window.addEventListener('load', function(){
 
       //Timer
       const formattedTime = (this.game.gameTime * 0.001).toFixed(1);
-      context.fillText('Timer: ' + formattedTime, 20, 50);
+      const timeLeft = ((this.game.timeLimit * 0.001) - formattedTime).toFixed(1);
+      context.fillText('Timer: ' + timeLeft, 20, 50);
 
       
       //Game Over Message
@@ -215,7 +217,7 @@ window.addEventListener('load', function(){
         context.font = '25px ' + this.fontFamily;
         context.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 40);
 
-        document.formName.inputName.value=5;
+        document.formName.inputName.value=formattedTime;
 
       }
       context.restore();
@@ -282,7 +284,10 @@ window.addEventListener('load', function(){
             projectile.markedForDeletion = true;
             if (enemy.lives <= 0){
               enemy.markedForDeletion = true;
-              if (!this.gameOver) this.score += enemy.score;
+              if (!this.gameOver){
+                this.score += enemy.score;
+                this.timeLimit += enemy.bonusTime * 1000;
+              }
               if (this.score > this.winningScore) this.gameOver = true;
             }
           }
