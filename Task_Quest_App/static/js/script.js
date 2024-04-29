@@ -16,8 +16,15 @@ window.addEventListener('load', function(){
                 (e.key === 'ArrowRight') || (e.key === 'd')
              ) && this.game.keys.indexOf(e.key) === -1){  // for the first time
           this.game.keys.push(e.key);
-        } else if (e.key === ' '){
+        } 
+        else if (e.key === ' '){
           this.game.player.shootTop();
+        }
+        else if (e.key === 'Shift' && this.game.refillPowerup){
+            this.game.player.refillAmmo();
+        }
+        else if (e.key === '/' && this.game.clearPowerup){
+            this.game.player.clearEnemies();
         }
       });
       window.addEventListener('keyup', e => {
@@ -74,7 +81,7 @@ window.addEventListener('load', function(){
       if ((this.game.keys.includes('ArrowLeft') || this.game.keys.includes('a')) && this.x > 0) this.speedX = -this.maxSpeed;
       else if ((this.game.keys.includes('ArrowRight') || this.game.keys.includes('d')) && this.x + this.width < this.game.width) this.speedX = this.maxSpeed;
       else this.speedX = 0;
-      
+
       this.y += this.speedY;
       this.x += this.speedX;
 
@@ -100,6 +107,14 @@ window.addEventListener('load', function(){
         this.game.ammo--;
       }
     }
+
+    refillAmmo(){
+      this.game.ammo = this.game.maxAmmo;
+    }
+
+    clearEnemies(){
+      this.game.enemies = [];
+    }
   }
   
   class Enemy {    //Class to create and handle enemies
@@ -118,7 +133,7 @@ window.addEventListener('load', function(){
       this.y += this.speedY;
       if (this.y + this.height > this.game.height){
         this.markedForDeletion = true;
-        this.game.timeLimit -= this.bonusTime * 1000;
+        if (!this.gameOver) this.game.timeLimit -= this.bonusTime * 1000;
       }
     }
 
@@ -254,6 +269,8 @@ window.addEventListener('load', function(){
       this.speed = 1;
       this.difficultyTimer = 20000;
       this.difficulty = 0;
+      this.refillPowerup = true;
+      this.clearPowerup = true;
     }
     
     update(deltaTime){
