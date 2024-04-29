@@ -275,6 +275,7 @@ window.addEventListener('load', function(){
         enemy.update();
         if (this.checkCollision(this.player, enemy)){
           enemy.markedForDeletion = true;
+          this.timeLimit -= enemy.bonusTime * 1000;
         }
 
         //Handles enemy collisions with projectiles
