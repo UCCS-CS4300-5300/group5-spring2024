@@ -66,12 +66,12 @@ window.addEventListener('load', function(){
     }
 
     update(){
-      if (this.game.keys.includes('ArrowUp') || this.game.keys.includes('w')) this.speedY = -this.maxSpeed;
-      else if (this.game.keys.includes('ArrowDown') || this.game.keys.includes('s')) this.speedY = this.maxSpeed;
+      if ((this.game.keys.includes('ArrowUp') || this.game.keys.includes('w')) && this.y > 0) this.speedY = -this.maxSpeed * 1.5;
+      else if ((this.game.keys.includes('ArrowDown') || this.game.keys.includes('s')) && this.y + this.height < this.game.height) this.speedY = this.maxSpeed * 1.5;
       else this.speedY = 0;
 
-      if (this.game.keys.includes('ArrowLeft') || this.game.keys.includes('a')) this.speedX = -this.maxSpeed;
-      else if (this.game.keys.includes('ArrowRight') || this.game.keys.includes('d')) this.speedX = this.maxSpeed;
+      if ((this.game.keys.includes('ArrowLeft') || this.game.keys.includes('a')) && this.x > 0) this.speedX = -this.maxSpeed;
+      else if ((this.game.keys.includes('ArrowRight') || this.game.keys.includes('d')) && this.x + this.width < this.game.width) this.speedX = this.maxSpeed;
       else this.speedX = 0;
       
       this.y += this.speedY;
