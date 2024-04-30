@@ -25,8 +25,8 @@ class Profile(models.Model):
   total_points = models.IntegerField(default=0)
   longest_game = models.FloatField(default=0)
 
-    def __str__(self):
-        return self.user.username
+  def __str__(self):
+    return self.user.username
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
