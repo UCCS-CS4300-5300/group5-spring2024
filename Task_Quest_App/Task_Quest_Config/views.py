@@ -201,12 +201,18 @@ def postpone_task(request, task_id):
 def start_game(request):
   megaShip = Item.objects.get(name='Mega Ship')
   gigaShip = Item.objects.get(name='Giga Ship')
+  timePotion = Item.objects.get(name='Time Potion')
+  poison = Item.objects.get(name='Poison')
   
   boughtMega = PurchasedItem.objects.filter(user = request.user, item=megaShip).exists()
-  boughtGiga = PurchasedItem.objects.filter(item=gigaShip).exists()
+  boughtGiga = PurchasedItem.objects.filter(user = request.user, item=gigaShip).exists()
+  boughtTime = PurchasedItem.objects.filter(user = request.user, item=timePotion).exists()
+  boughtPoison = PurchasedItem.objects.filter(user = request.user, item=poison).exists()
   context = {
     'megaShip': boughtMega,
     'gigaShip': boughtGiga,
+    'timePotion': boughtTime,
+    'poison': boughtPoison,
   }
   if request.method == 'POST':
     # Create a new dictionary with form data and movie_title

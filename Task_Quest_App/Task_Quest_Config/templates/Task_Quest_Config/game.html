@@ -11,31 +11,29 @@
   </head>
   <body>
 
+    {% block content %}
     <form name='formName' method="post" action="{% url 'quest-game' %}">
-      <label label style="font-size: 24px; font-weight: bold; color: #39FF14;"> High Score: {{ inputName }}
+      <label style="font-size: 24px; font-weight: bold; color: #39FF14;"> High Score: {{ inputName }}
         <input type="text" name='inputName' readonly>
         </label>
       {% csrf_token %}
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
 
+    {% endblock %}
+
 {% block page_css %}
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-    /* Override the body background color for the game page */
     body {
      background-image: url("{% static 'images/space10.jpg' %}");
-     height: 100vh; /* 100% of viewport height */
-     width: 100%; /* 100% of viewport width */
-     background-size: contain; /* Cover the entire background */
-     background-position: center; /* 
+     height: 100vh; 
+     width: 100%; 
+     background-size: contain; 
+     background-position: center;  
     }
   </style>
-
-
-{% endblock %}
-
 
     <canvas id="canvas1"></canvas>
 
@@ -53,9 +51,19 @@
 <!-- Difficulty -->
     <form>
       <ul hidden>
-        <li><data value="3" id="enemy-health"></data></li>
-        <li><data value="60000" id="starting-time"></data></li>
         <li><data value="25" id="target-score"></data></li>
+
+        {% if poison %}
+        <li><data value="1" id="enemy-health"></data></li>
+        {% else %}
+        <li><data value="3" id="enemy-health"></data></li>
+        {% endif %}
+
+        {% if timePotion %}
+        <li><data value="90000" id="starting-time"></data></li>
+        {% else %}
+        <li><data value="60000" id="starting-time"></data></li>
+        {% endif %}
 
         {% if gigaShip %}
         

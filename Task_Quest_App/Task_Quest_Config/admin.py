@@ -12,3 +12,4 @@ class ItemAdmin(admin.ModelAdmin):
   list_display = ['name', 'cost', 'description', 'image']
 
 admin.site.register(Item, ItemAdmin)
+admin.site.register(PurchasedItem)
