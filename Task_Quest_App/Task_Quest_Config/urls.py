@@ -22,11 +22,13 @@ urlpatterns = [
   # Task List and Add Task
   path('tasks/', views.TaskListView.as_view(), name='task-list'),
   path('addtask/', views.create_task, name='add-task'),
+  path('edit-task/<int:task_id>/', views.edit_task, name='edit-task'),
+  path('postpone-task/<int:task_id>/', views.postpone_task, name='postpone-task'),
+  path('complete-task/<int:task_id>/', views.complete_task, name='complete_task'),
+  path('remove-task/<int:task_id>/', views.remove_task, name='remove_task'),
 
   # Game page 
   path('game/', views.start_game, name='quest-game'),
-  path('complete-task/<int:task_id>/', views.complete_task, name='complete_task'),
-  path('remove-task/<int:task_id>/', views.remove_task, name='remove_task'),
 
   # Points Shop page 
   path('shop/', views.shop, name='shop'), 
