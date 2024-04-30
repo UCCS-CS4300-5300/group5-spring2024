@@ -6,60 +6,59 @@
   {% endblock %}
 
   {% block content %}
-  <div class="row">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title"><b>Top Tasks To Do</b></h4>
-          <div id="display-tasks-donut-chart"></div>   
-        </div>
-        <div class="card-body">
-          <ul class="list-group">
-            {% for task in top_tasks %}
-                <li class="list-group-item">                
-                  <div><b>{{ task.name }} </b></div>                
-                  <div class="d-flex justify-content-between align-items-center">
-                    <small> points: {{ task.points }} </small>
-                    <div>
-                      <small>  {{ task.date | date:"N j, Y" }} | {{ task.time | date:"P" }}</small>
-                    </div>
-                  </div>
-                </li>
-            {% empty %}
-              <li class="list-group-item">
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title"><strong>Top Tasks To Do</strong></h4>
+        <div id="display-tasks-donut-chart"></div>   
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          {% for task in top_tasks %}
+              <li class="list-group-item">                
+                <div><strong>{{ task.name }} </strong></div>                
                 <div class="d-flex justify-content-between align-items-center">
-                  <div>No Task to Show</div>                
+                  <small> points: {{ task.points }} </small>
+                  <div>
+                    <small>  {{ task.date | date:"N j, Y" }} | {{ task.time | date:"P" }}</small>
+                  </div>
                 </div>
-              </li>            
-            {% endfor %}
-          </ul>
-          <div class="d-flex justify-content-between align-items-center">
-            <a href="{% url 'task-list' %}" class="btn btn-primary mt-3">View All Tasks</a>
-            <a href="{% url 'add-task' %}" class="btn btn-success add-task mt-3"  > + Add Task</a>
-          </div>
+              </li>
+          {% empty %}
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>No Task to Show</div>                
+              </div>
+            </li>            
+          {% endfor %}
+        </ul>
+        <div class="d-flex justify-content-between align-items-center">
+          <a href="{% url 'task-list' %}" class="btn btn-primary mt-3">View All Tasks</a>
+          <a href="{% url 'add-task' %}" class="btn btn-success add-task mt-3"  > + Add Task</a>
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">Points Gained</h4>
-          <p class="card-text">Total Points: {{ total_points }}</p>
-          <p class="card-text">Level: Beginner</p>
-        </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Points Gained</h4>
+        <p class="card-text">Total Points: {{ total_points }}</p>
+        <p class="card-text">Level: Beginner</p>
       </div>
-      <div class="card">
-        <div class="card-body">
-          <h4 class="card-title">User Profile</h4>
-          <p class="card-text">Username: {{ user.username }}</p>
-          <p class="card-text">Email: {{ user.email }}</p>
-          <div class="d-flex justify-content-between align-items-center text-right">
-            <a href="#" class="btn btn-outline-primary">Edit Profile</a>
-            <form action="{% url 'logout' %}" method="post">
-              {% csrf_token %}
-              <button class="btn btn-outline-danger" type="submit">Log Out</button>
-            </form>
-          </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">User Profile</h4>
+        <p class="card-text">Username: {{ user.username }}</p>
+        <p class="card-text">Email: {{ user.email }}</p>
+        <div class="d-flex justify-content-between align-items-center text-right">
+          <a href="#" class="btn btn-outline-primary">Edit Profile</a>
+          <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger" type="submit">Log Out</button>
+          </form>
         </div>
       </div>
     </div>
@@ -83,6 +82,8 @@
     </div>
   </div>
 </div>
+
+
 {% endblock %}
 
 
