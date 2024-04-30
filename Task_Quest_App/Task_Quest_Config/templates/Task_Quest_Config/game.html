@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
   </head>
   <body>
-    <!-- {% block content %} -->
-    <label style="font-size: 24px; font-weight: bold; color: #39FF14;">Points: {{ points }}</label>
 
     <form name='formName' method="post" action="{% url 'quest-game' %}">
       <label label style="font-size: 24px; font-weight: bold; color: #39FF14;"> High Score: {{ inputName }}
@@ -38,13 +36,10 @@
 
 {% endblock %}
 
-<!-- { block content %} -->
 
-    
     <canvas id="canvas1"></canvas>
 
 <!-- Characters -->
-    <img id="Player" src="{% static 'images/Player.png' %}">
     <img id="Fighter" src="{% static 'images/Alien1.png' %}">
     <img id="Clear" src="{% static 'images/SmallOrbPowerup.png' %}">
     <img id="Refill" src="{% static 'images/SmallAmmoPowerup.png' %}">
@@ -61,7 +56,29 @@
         <li><data value="3" id="enemy-health"></data></li>
         <li><data value="60000" id="starting-time"></data></li>
         <li><data value="25" id="target-score"></data></li>
+
+        {% if gigaShip %}
+        
+        <img id="Player" src="{% static 'images/PlayerTeal.png' %}">
+        <li><data value="10" id="player-damage"></data></li>
+        <li><data value="250" id="player-recharge"></data></li>
+        <li><data value="6" id="player-speed"></data></li>
+
+        {% elif megaShip %}
+
+        <img id="Player" src="{% static 'images/PlayerPink.png' %}">
+        <li><data value="6" id="player-damage"></data></li>
+        <li><data value="400" id="player-recharge"></data></li>
+        <li><data value="4" id="player-speed"></data></li>
+        
+        {% else %}
+        
+        <img id="Player" src="{% static 'images/Player.png' %}">
         <li><data value="2" id="player-damage"></data></li>
+        <li><data value="500" id="player-recharge"></data></li>
+        <li><data value="3" id="player-speed"></data></li>
+        
+        {% endif %}
       </ul>
     </form>
 
@@ -71,7 +88,7 @@
 
   </body>
 
-<!-- {% endblock %} -->
+{% endblock %}
 
 {% block page_js %}
   <script src="{% static 'js/script.js' %}"></script>
