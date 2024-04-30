@@ -202,7 +202,15 @@ def postpone_task(request, task_id):
 
 
 def start_game(request):
-  gameData = {'points': request.user.profile.total_points}
+  megaShip = Item.objects.get(name='Mega Ship')
+  gigaShip = Item.objects.get(name='Giga Ship')
+  
+  boughtMega = PurchasedItem.objects.filter(user = request.user, item=megaShip).exists()
+  boughtGiga = PurchasedItem.objects.filter(item=gigaShip).exists()
+  context = {
+    'megaShip': boughtMega,
+    'gigaShip': boughtGiga,
+  }
   if request.method == 'POST':
     # Create a new dictionary with form data and movie_title
     game_data = request.POST.copy()
@@ -210,7 +218,7 @@ def start_game(request):
       request.user.profile.longest_game = game_data.get('inputName')
       request.user.profile.save()
       
-  return render(request, 'Task_Quest_Config/game.html', gameData)
+  return render(request, 'Task_Quest_Config/game.html', context)
 
 
 

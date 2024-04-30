@@ -61,7 +61,7 @@ window.addEventListener('load', function(){
       this.y = 400;
       this.speedY = 0;
       this.speedX = 0;
-      this.maxSpeed = 3;
+      this.maxSpeed = parseInt(document.getElementById('player-speed').value);
       this.projectiles = [];
       this.damage = parseInt(document.getElementById('player-damage').value)
       this.image = document.getElementById('Player');
@@ -287,7 +287,7 @@ window.addEventListener('load', function(){
       this.ammo = 20;
       this.maxAmmo = 50;
       this.ammoTimer = 0;
-      this.ammoInterval = 500;
+      this.ammoInterval = parseInt(document.getElementById('player-recharge').value);
       this.score = 0;
       this.gameOver = false;
       this.score = 0;
