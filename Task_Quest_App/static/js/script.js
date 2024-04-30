@@ -126,7 +126,7 @@ window.addEventListener('load', function(){
       this.y += this.speedY;
       if (this.y + this.height > this.game.height){
         this.markedForDeletion = true;
-        if (!this.gameOver) this.game.timeLimit -= this.bonusTime * 1000;
+        if (!this.game.gameOver) this.game.timeLimit -= this.bonusTime * 1000;
       }
     }
 
