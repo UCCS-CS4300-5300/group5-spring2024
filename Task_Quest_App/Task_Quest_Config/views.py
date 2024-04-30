@@ -198,9 +198,6 @@ def postpone_task(request, task_id):
   # Redirect back to the calendar page
   return redirect('task-list')
 
-
-
-
 def start_game(request):
   gameData = {'points': request.user.profile.total_points}
   if request.method == 'POST':
@@ -211,8 +208,6 @@ def start_game(request):
       request.user.profile.save()
       
   return render(request, 'Task_Quest_Config/game.html', gameData)
-
-
 
 @login_required
 def home_page(request):

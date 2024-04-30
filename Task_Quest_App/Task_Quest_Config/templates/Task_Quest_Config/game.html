@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
   </head>
   <body>
-    {% block content %}
+    <!-- {% block content %} -->
     <label>Points: {{ points }}</label>
 
     <form name='formName' method="post" action="{% url 'quest-game' %}">
@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock %}
 
+<!-- { block content %} -->
 
     <label>Points: {{ points }}</label>
     <canvas id="canvas1"></canvas>
@@ -55,9 +56,10 @@
     <div class="container-fluid">
       <script src="{% static 'js/script.js' %}"></script>
     </div>
+
   </body>
 
-{% endblock %}
+<!-- {% endblock %} -->
 
 {% block page_js %}
   <script src="{% static 'js/script.js' %}"></script>
