@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock %}
 
-{% block content %}
+
     <label>Points: {{ points }}</label>
     <canvas id="canvas1"></canvas>
 
@@ -51,9 +51,10 @@
         <li><data value="2" id="player-damage"></data></li>
       </ul>
     </form>
-    
-    <script src="{% static 'js/script.js' %}"></script>
-    {% endblock %}
+
+    <div class="container-fluid">
+      <script src="{% static 'js/script.js' %}"></script>
+    </div>
   </body>
 
 {% endblock %}

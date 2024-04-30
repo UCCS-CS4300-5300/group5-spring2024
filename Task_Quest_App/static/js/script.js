@@ -3,7 +3,7 @@ window.addEventListener('load', function(){
   const canvas = document.getElementById('canvas1');
   const ctx = canvas.getContext('2d');
   canvas.width = 540;
-  canvas.height = 700;
+  canvas.height = 540;
 
   // game functions
   class InputHandler {  // class for handling input
@@ -58,7 +58,7 @@ window.addEventListener('load', function(){
       this.width = 52;
       this.height = 68;
       this.x = 250;  
-      this.y = 600;
+      this.y = 400;
       this.speedY = 0;
       this.speedX = 0;
       this.maxSpeed = 3;
