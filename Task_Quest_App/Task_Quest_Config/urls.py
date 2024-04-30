@@ -34,6 +34,9 @@ urlpatterns = [
   path('shop/', views.shop, name='shop'), 
   path('buy-item/<int:item_id>/', views.buy_item, name='buy_item'),
 
+  # Profile page
+  path('profile/', views.profile_page, name='profile'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #urlpatterns  +=  static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

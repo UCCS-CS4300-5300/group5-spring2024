@@ -302,3 +302,9 @@ def buy_item(request, item_id):
         messages.error(request, 'Insufficient points to purchase this item.')
 
     return redirect('shop')
+
+@login_required
+def profile_page(request):
+    profile = Profile.objects.get(user=request.user)
+    purchased_items = PurchasedItem.objects.filter(user=request.user)
+    return render(request, 'Task_Quest_Config/profile.html', {'profile': profile, 'purchased_items': purchased_items})
