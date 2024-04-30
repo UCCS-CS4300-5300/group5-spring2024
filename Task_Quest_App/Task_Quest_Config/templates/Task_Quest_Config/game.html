@@ -11,10 +11,10 @@
   </head>
   <body>
     <!-- {% block content %} -->
-    <label>Points: {{ points }}</label>
+    <label style="font-size: 24px; font-weight: bold; color: #39FF14;">Points: {{ points }}</label>
 
     <form name='formName' method="post" action="{% url 'quest-game' %}">
-      <label> High Score: {{ inputName }}
+      <label label style="font-size: 24px; font-weight: bold; color: #39FF14;"> High Score: {{ inputName }}
         <input type="text" name='inputName' readonly>
         </label>
       {% csrf_token %}
@@ -24,11 +24,23 @@
 {% block page_css %}
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+    /* Override the body background color for the game page */
+    body {
+     background-image: url("{% static 'images/space10.jpg' %}");
+     height: 100vh; /* 100% of viewport height */
+     width: 100%; /* 100% of viewport width */
+     background-size: contain; /* Cover the entire background */
+     background-position: center; /* 
+    }
+  </style>
+
+
 {% endblock %}
 
 <!-- { block content %} -->
 
-    <label>Points: {{ points }}</label>
+    
     <canvas id="canvas1"></canvas>
 
 <!-- Characters -->
