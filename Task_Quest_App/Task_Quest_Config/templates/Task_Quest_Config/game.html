@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Quest Game{% endblock %}
 {% load static %}
 
 <html lang="en">
@@ -19,7 +21,13 @@
       <button type="submit" class="btn btn-primary">Save</button>
     </form>
 
+{% block page_css %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
 
+{% block content %}
+    <label>Points: {{ points }}</label>
     <canvas id="canvas1"></canvas>
 
 <!-- Characters -->
@@ -32,6 +40,7 @@
 
 <!-- Environment -->
     <img id="layer1" src="{% static 'images/space.png' %}">
+
 
 <!-- Difficulty -->
     <form>
@@ -46,3 +55,12 @@
     <script src="{% static 'js/script.js' %}"></script>
     {% endblock %}
   </body>
+
+{% endblock %}
+
+{% block page_js %}
+  <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+
+
+

@@ -1,90 +1,144 @@
+
 {% extends "base.html" %}
 {% block title %}Calendar Page{% endblock %}
 {% block page_css %}
-  <style>
-      .month {
-          font-size: 25px;
-          margin: auto; 
-          border: 1px solid black;
-      }
-      .calendar-container {
-          overflow-x: auto;        /* Enable horizontal scrolling if needed */
-          margin-bottom: 300px;     /* Adjust as needed */
-          background-color: #808080;
-          box-shadow: 0 4px 8px rgba(0,0,0,.1);
-          border-radius: .25rem; 
-          padding: 0 15px; 
-      }
-      .calendar {
-          width: 100%; 
-          max-width: 100%; 
-          margin: auto; 
-          display: block;
-      }
-      .calendar table {
-          width: 100%;
-          table-layout: fixed;
-          border-collapse: collapse; /* Collapse borders for a consistent look */
-      }
-      .calendar td {
-          border: 1px solid #ddd; /* Add borders to table cells */
-          padding: 50px; /* Adjust padding as needed */
-          text-align: center; /* Center align cell content */
-      }
-      .nav-button, .view-button, .add-task {
-          transition: background-color .3s ease;
-      }
-      .nav-button:hover, .view-button:hover, .add-task:hover {
-          background-color: #0056b3; 
-      }
-      .view-button.active {
-          background-color: #0056b3;
-          color: #fff;
-      }
-      .month-year {
-          color: #000;
-      }
-      .day {
-          border: 1px solid #b3d7ff; 
-          background-color: #f0f8ff; 
-      }
-      .day.today {
-          background-color: #007bff;
-          color: white;
-          font-weight: bold;
-      }
+<style>
+/* Add your custom CSS styles here */
+.calendar {
+  max-width: 600px;
+  margin: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
 
+.calendar-header {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+.calendar-header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.calendar-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 20px;
+}
+
+.day {
+  border: 1px solid #ccc;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.day:hover {
+  background-color: #f0f0f0;
+}
+
+
+
+.tasks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task {
+  padding: 5px; /* Adjust padding as needed */
+  margin-bottom: 5px;
+}
+
+/* Add colors for different difficulty levels */
+.task.difficulty-1 {
+  background-color: #ffcccc; /* Light red for difficulty level 1 */
+}
+
+.task.difficulty-2 {
+  background-color: #ffd699; /* Light orange for difficulty level 2 */
+}
+
+.task.difficulty-3 {
+  background-color: #ffff99; /* Light yellow for difficulty level 3 */
+}
+
+.task.difficulty-4 {
+  background-color: #ccffcc; /* Light green for difficulty level 4 */
+}
+
+.task.difficulty-5 {
+  background-color: #cce6ff; /* Light blue for difficulty level 5 */
+}
+
+/* Add colors for different priority levels */
+.task.priority-1 {
+  border: 1px solid #ff9999; /* Light red border for priority level 1 */
+}
+
+.task.priority-2 {
+  border: 1px solid #ffcc99; /* Light orange border for priority level 2 */
+}
+
+.task.priority-3 {
+  border: 1px solid #ffff99; /* Light yellow border for priority level 3 */
+}
+
+.task.priority-4 {
+  border: 1px solid #99ff99; /* Light green border for priority level 4 */
+}
+
+.task.priority-5 {
+  border: 1px solid #99ccff; /* Light blue border for priority level 5 */
+}
 </style>
 {% endblock %}
 
 {% block content %}
-  <div class="container calendar-container my-5 py-3">
-      <form action="{% url 'logout' %}" method="post">
-          {% csrf_token %}
-          <button class="btn btn-outline-primary logout-button" type="submit">Log Out</button>
-      </form>
-      <p></p>      
-      <div class="header d-flex justify-content-between align-items-center mb-3">
-          <a href="{% url 'prev_month' prev_year prev_month %}" class="btn btn-primary nav-button">&#60; Prev</a>
-            <span class="month-year h5 mb-0">{{ current_month_year }}</span>
-            <a href="{% url 'next_month' next_year next_month %}" class="btn btn-primary nav-button">Next &#62;</a>
-          <div class="view-options">
-              <button class="btn btn-primary view-button" id="day-view">Day</button>
-              <button class="btn btn-primary view-button" id="week-view">Week</button>
-              <button class="btn btn-primary view-button active" id="month-view">Month</button>
-          </div>
-          {% if user.is_authenticated %}
-              <a class="btn btn-success add-task" href="{% url 'add-task' %}"> + Add Task</a>
-          {% else %}
-              <a class="btn btn-success add-task" href="{% url 'login' %}">Log In to Add Task</a>
-          {% endif %}      
-      </div>
-      <div class="calendar ">
-          <!-- Calendar grid goes here -->
-          <table class="table table-bordered calendar">
-              <!-- Calendar grid content -->
-              {{ calendar|safe }} <!-- Added |safe filter to render HTML safely -->
-          </table>
-      </div>
+<div class="container calendar-container my-5 py-3">      
+  <div class="header d-flex justify-content-between align-items-center mb-3">
+    <a href="{% url 'prev_month' prev_year prev_month %}" class="btn btn-primary nav-button">&#60; Prev</a>
+    <span class="month-year h5 mb-0">{{ current_month_year }}</span>
+    <a href="{% url 'next_month' next_year next_month %}" class="btn btn-primary nav-button">Next &#62;</a>
+    <div class="view-options">
+      <button class="btn btn-primary view-button" id="day-view">Day</button>
+      <button class="btn btn-primary view-button" id="week-view">Week</button>
+      <button class="btn btn-primary view-button active" id="month-view">Month</button>
+    </div>
+    {% if user.is_authenticated %}
+      <a class="btn btn-success add-task" href="{% url 'add-task' %}"> + Add Task</a>
+    {% else %}
+      <a class="btn btn-success add-task" href="{% url 'login' %}">Log In to Add Task</a>
+    {% endif %}      
   </div>
+  <div class="calendar">
+    <div class="calendar-header">
+      <h1>{{ current_month_year }}</h1>
+    </div>
+    <div class="calendar-body">
+      <div class="day">Sun</div>
+      <div class="day">Mon</div>
+      <div class="day">Tue</div>
+      <div class="day">Wed</div>
+      <div class="day">Thu</div>
+      <div class="day">Fri</div>
+      <div class="day">Sat</div>
+      {% for day in calendar_days %}
+      <div class="day {% if day.is_today %}today{% endif %}">
+        {% if day.day_number %}
+          {{ day.day_number }}
+          {% for task in day.tasks %}
+            <div class="task difficulty-{{ task.difficulty }} priority-{{ task.priority }}">{{ task.name }}</div>
+          {% endfor %}
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 {% endblock %}

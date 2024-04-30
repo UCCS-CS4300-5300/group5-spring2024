@@ -9,49 +9,6 @@
         padding: 20px;
         margin-top: 20px;
     }
-
-    .nav-button, .view-button, .add-task {
-        transition: background-color .3s ease;
-    }
-
-    .nav-button:hover, .view-button:hover, .add-task:hover {
-        background-color: #0056b3; /* Darker shade for hover */
-    }
-
-    .view-button.active {
-        background-color: #0056b3;
-        color: #fff;
-    }
-
-    .month-year {
-        color: #000;
-    }
-
-    .day {
-        border: 1px solid #b3d7ff;
-        background-color: #f0f8ff;
-    }
-
-    .day.today {
-        background-color: #007bff;
-        color: white;
-        font-weight: bold;
-    }
-
-
-    .task-list-container {
-        background-color: #f0f8ff; 
-        border: 1px solid #b3d7ff; 
-    }
-
-    .task-list-container h4 {
-        color: #007bff;
-    }
-
-    .task-list-container .list-group-item {
-        border-color: #b3d7ff; 
-        background-color: #ffffff; 
-    }
 </style>
 {% endblock %}
 
@@ -59,32 +16,95 @@
 <div class="task-list-container">    
     <div class="d-flex justify-content-between align-items-center">
       <h4 class="mb-3">Tasks</h4>
+      <div>Total Points: {{ total_points }}</div>
       <a class="btn btn-success add-task" href="{% url 'add-task' %}"> + Add Task</a>
     </div>
     <ul class="list-group">
         {% for task in task_list %}
         <li class="list-group-item">
-            <div>Name: {{ task.name }}</div>
+            <div>Name: <strong>{{ task.name }}</strong></div>
             <div>Date: {{ task.date | date:"N j, Y" }}</div>
             <div>Time: {{ task.time | date:"P" }}</div>
-            <div>Points: {{ task.points }}</div>
+            <div>Points: <strong>{{ task.points }}</strong></div>
             <div>Priority: {{ task.priority }}</div>
             <div>Difficulty: {{ task.difficulty }}</div>
             <div>Assigned to: {{ task.user.username }}</div>
+            <div><p></p></div>
+            <a href="{% url 'edit-task' task.id %}" class="btn btn-primary">Edit Task</a>
             <form method="post" action="{% url 'complete_task' task.id %}" style="display: inline;">
                 {% csrf_token %}
                 <input type="hidden" name="task_id" value="{{ task.id }}">
                 <button type="submit" class="btn btn-success">Complete Task</button>
             </form>
-            <form method="post" action="{% url 'remove_task' task.id %}" style="display: inline;">
+          <a href="#" class="btn btn-warning" data-toggle="modal" 
+            data-target="#postponeTaskModal{{ task.id }}">Postpone Task</a>
+            <form id="remove-task-form{{ task.id  }}" method="post" 
+              action="{% url 'remove_task' task.id %}" style="display: inline;">
                 {% csrf_token %}
                 <input type="hidden" name="task_id" value="{{ task.id }}">
-                <button type="submit" class="btn btn-danger">Remove Task</button>
+                <button type="button" class="btn btn-danger" 
+                  onclick="removeTask('{{ task.name }}', 'remove-task-form{{ task.id  }}')">Remove Task</button>
             </form>
         </li>
+
+      <!-- Modal to postponing Task -->
+      <div class="modal fade" id="postponeTaskModal{{ task.id }}" 
+        role="dialog" aria-labelledby="postponeTaskModalLabel{{ task.id }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h6 class="modal-title" id="postponeTaskModalLabel{{ task.id }}">Postpone 
+                <strong>'{{ task.name }}'</strong>
+              </h6>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!-- Form to Postpone a Task-->
+              <form action="{% url 'postpone-task' task.id %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <div>Points: {{ task.points }}</div>
+                  <div>Priority: {{ task.priority }}</div>
+                  <div>Difficulty: {{ task.difficulty }}</div>
+                </div>
+                <div class="form-group">
+                  <label for="postponeDate{{ task.id }}">New Date</label>
+                  <input type="date" class="form-control" id="postponeDate{{ task.id }}" 
+                    name="date" value="{{ task.date|date:'Y-m-d' }}" min="{{ task.date|date:'Y-m-d' }}" required>
+                </div>
+                <div class="form-group">
+                  <label for="postponeTime{{ task.id }}">New Time (HH:mm)</label>
+                  <input type="time" class="form-control" id="postponeTime{{ task.id }}" 
+                    name="time" value="{{ task.time|time:'H:i' }}" autocomplete="off" required>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <button type="submit" class="btn btn-primary">Postpone</button>
+                  <a href="#" class="btn btn-outline-secondary" data-dismiss="modal" aria-label="Close">Cancel</a>
+                </div>
+              </form>
+              <!-- End Form to Postpone a Task-->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Modal for postponing task -->
         {% empty %}
         <li class="list-group-item">No tasks to show.</li>
         {% endfor %}
     </ul>
 </div>
+{% endblock %}
+
+{% block page_js %}
+  <script>
+    //confirm task removal action
+    function removeTask(task_name, form_id) {
+      if(confirm(`Are you sure you want to remove "${task_name}"?`)) {
+        // if yes, submit the form
+        document.getElementById(form_id).submit();
+      }
+    }//removeTask
+  </script>
 {% endblock %}

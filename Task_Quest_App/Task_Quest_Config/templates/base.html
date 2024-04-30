@@ -8,27 +8,33 @@
   {% block page_css %}
   {% endblock %}
   <style>
-    body, html {
-      background-color: #f8f9fa;
-      height: 100%;
-      Width: 100%;
-    }
-    .footer-link {
-      margin-top: 2em; 
-    }
-    .container {
-      margin-top: 50px;
-    }
-    .task-form {
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 5px;
-      box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
-    }
+  body, html {
+    background-color: #f8f9fa;
+    height: 100%;
+    Width: 100%;
+    padding-bottom: 10em;
+  }
+  .footer-link {
+    margin-top: 2em; 
+  }
+  .container {
+    margin-top: 50px;
+  }
+  .task-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
+  }
+  .navbar-with-image {
+    background-image: url("https://i.imgur.com/LksriXk.png");
+    background-size: cover;
+  }
+
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-with-image">
     <div class="container">
       <a class="navbar-brand" href="{% url 'home' %}"><h1>TaskQuest</h1></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,6 +54,12 @@
             </li>
             <li class="nav-item {% if request.resolver_match.url_name == 'add-task' %}active{% endif %}">
               <a class="nav-link" href="{% url 'add-task' %}">Add Task</a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'shop' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'shop' %}">Shop</a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'quest-game' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'quest-game' %}">Quest Game</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -72,9 +84,19 @@
     </div>
   </nav>
   <div class="container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
     {% block content %}
     {% endblock %}
   </div>
+  <p><br/></p>
+  
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
