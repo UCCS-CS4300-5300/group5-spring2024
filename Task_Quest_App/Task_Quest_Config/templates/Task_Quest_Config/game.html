@@ -1,5 +1,25 @@
 {% extends "base.html" %}
 {% block title %}Quest Game{% endblock %}
+{% load static %}
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content ="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    {% block content %}
+    <label>Points: {{ points }}</label>
+
+    <form name='formName' method="post" action="{% url 'quest-game' %}">
+      <label> High Score: {{ inputName }}
+        <input type="text" name='inputName' readonly>
+        </label>
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
 
 {% block page_css %}
   {% load static %}
@@ -13,15 +33,34 @@
 <!-- Characters -->
     <img id="Player" src="{% static 'images/Player.png' %}">
     <img id="Fighter" src="{% static 'images/Alien1.png' %}">
-
+    <img id="Clear" src="{% static 'images/SmallOrbPowerup.png' %}">
+    <img id="Refill" src="{% static 'images/SmallAmmoPowerup.png' %}">
+    
 <!-- Props -->
 
 <!-- Environment -->
     <img id="layer1" src="{% static 'images/space.png' %}">
+
+
+<!-- Difficulty -->
+    <form>
+      <ul hidden>
+        <li><data value="3" id="enemy-health"></data></li>
+        <li><data value="60000" id="starting-time"></data></li>
+        <li><data value="25" id="target-score"></data></li>
+        <li><data value="2" id="player-damage"></data></li>
+      </ul>
+    </form>
+    
+    <script src="{% static 'js/script.js' %}"></script>
+    {% endblock %}
+  </body>
+
 {% endblock %}
 
 {% block page_js %}
   <script src="{% static 'js/script.js' %}"></script>
 {% endblock %}
+
 
 

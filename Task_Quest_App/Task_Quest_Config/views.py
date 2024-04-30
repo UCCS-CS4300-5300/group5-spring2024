@@ -203,6 +203,13 @@ def postpone_task(request, task_id):
 
 def start_game(request):
   gameData = {'points': request.user.profile.total_points}
+  if request.method == 'POST':
+    # Create a new dictionary with form data and movie_title
+    game_data = request.POST.copy()
+    if float(game_data.get('inputName')) > request.user.profile.longest_game:
+      request.user.profile.longest_game = game_data.get('inputName')
+      request.user.profile.save()
+      
   return render(request, 'Task_Quest_Config/game.html', gameData)
 
 

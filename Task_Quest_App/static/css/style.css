@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+input[type="text"]
+{
+    font-size:24px;
+}
+
 #canvas1 {
   border: 5px solid black;
   position: absolute;
@@ -11,8 +16,10 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: #4d79bc;
+  max-width: 100%;
+  max-height: 100%;
 }
 
-#layer1, #Player, #Fighter{
+#layer1, #Player, #Fighter, #Refill, #Clear{
   display: none;
 }
