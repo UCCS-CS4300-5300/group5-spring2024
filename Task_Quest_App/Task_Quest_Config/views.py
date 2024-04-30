@@ -218,6 +218,7 @@ def home_page(request):
     context = {
         'top_tasks': top_tasks, 
         'total_points': points.total_points,
+        'longest_game': points.longest_game,
         'serialized_tasks': serialized_tasks,
         'purchased_items': purchased_items  # Add to context
     }
