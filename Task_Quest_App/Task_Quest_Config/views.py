@@ -14,7 +14,9 @@ from django.shortcuts import get_object_or_404
 from dateutil.relativedelta import relativedelta
 
 from django.core.serializers import serialize
-import json
+from datetime import date
+from django.utils import timezone
+from django.db import transaction
 
 from dateutil.relativedelta import relativedelta
 
@@ -115,13 +117,14 @@ class TaskListView(generic.ListView):
     context = super().get_context_data(**kwargs)
     context['task_list'] = Task.objects.filter(user=self.request.user)
     context['current_user'] = self.request.user.username
+    points = Profile.objects.get(user=self.request.user)
+    context['total_points'] = points.total_points
     return context
 
 
 @login_required
 def create_task(request):
-  form = TaskForm
-
+  #form = TaskForm
   if request.method == 'POST':
     # Create a new dictionary with form data and movie_title
     task_data = request.POST.copy()
@@ -134,8 +137,68 @@ def create_task(request):
       task.save()
       # Redirect back to the calendar page
       return redirect('task-list')
-  context = {'form': form}
+  #prevent older dates to be selected in the task form
+  today_date = date.today().strftime('%Y-%m-%d')
+  context = {'today_date': today_date}
   return render(request, 'Task_Quest_Config/task_form.html', context)
+
+
+@login_required
+def edit_task(request, task_id):
+  # Edit task information other than the time and date
+  task = get_object_or_404(Task, pk=task_id, user=request.user)
+  if request.method == 'POST':
+    # Create a new dictionary with form data and movie_title
+    task_data = request.POST.copy()
+    form = TaskForm(task_data, request.FILES, instance=task)
+    form.data['time'] = task.time
+    form.data['date'] = task.date
+    if form.is_valid():
+      # Save the form without committing to the database
+      task = form.save(commit=False)
+      # Set the user relationship
+      task.user = request.user
+      task.save()
+      # Redirect back to the calendar page
+      return redirect('task-list')
+  #show form for editing task
+  context = {'task' : task}
+  return render(request, 'Task_Quest_Config/edit_task_form.html', context)
+
+@login_required
+def postpone_task(request, task_id):
+  # Postpone a task and add a penalty of  Total Points = Total Points - (0.25 * Task Points)
+  task = get_object_or_404(Task, pk=task_id, user=request.user)
+  old_task = Task.objects.get(pk=task_id, user=request.user)
+  if request.method == 'POST':
+    # Create a new dictionary with form data and movie_title
+    form = TaskForm(request.POST.copy(), request.FILES, instance=task)
+    form.data['name'] = task.name
+    form.data['difficulty'] = task.difficulty
+    form.data['priority'] = task.priority
+    form.data['points'] = task.points
+    if form.is_valid():
+      new_datetime = datetime.combine(task.date, task.time)
+      if new_datetime > datetime.combine(old_task.date, old_task.time):
+        with transaction.atomic():
+          try:
+            # Calculate point deduction
+            profile = Profile.objects.select_for_update().get(user=request.user)
+            penalty = int(0.25 * task.points)
+            #save the new total points
+            profile.total_points -= max(penalty, 0)
+            profile.save()
+            # save task data
+            task.save()
+          except Exception as e:
+            print(e)
+            transaction.set_rollback(True)
+      else:
+        messages.error(request, 'The new time must be after the old time.')
+  # Redirect back to the calendar page
+  return redirect('task-list')
+
+
 
 
 def start_game(request):
@@ -163,10 +226,20 @@ def home_page(request):
 def remove_task(request, task_id):
   # Retrieve task from database
   task = get_object_or_404(Task, id=task_id)
-
   # Check if the task belongs to the current user
   if task.user == request.user:
-    task.delete()
+    with transaction.atomic():
+      try:
+        #apply penalty for deleting task
+        profile = Profile.objects.get(user=request.user)
+        penalty = profile.total_points - task.points
+        profile.total_points = max(penalty, 0)
+        profile.save()
+        # Delete the task
+        task.delete()
+      except Exception as e:
+        print(e)
+        transaction.set_rollback(True)        
     return redirect('task-list')
   else:
     # If the task doesn't belong to the current user just redirect to task list page

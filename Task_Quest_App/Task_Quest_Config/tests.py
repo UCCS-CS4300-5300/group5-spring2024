@@ -7,6 +7,7 @@ from Task_Quest_App.Task_Quest_Config.forms import *
 from django.urls import reverse, resolve
 from datetime import datetime, date, time
 from django.utils import timezone
+from django.http import Http404 
 
 
 class TaskUnitTest(TestCase):
@@ -142,7 +143,83 @@ class HomePageIntegrationTest(APITestCase):
     self.assertContains(response, 'Task 1')
     self.assertContains(response, 'Task 2')
     self.assertContains(response, 'Task 3')
- 
+
+class PostponeTaskTestCase(TestCase):
+  def setUp(self):
+    self.client = APIClient()
+    self.user = User.objects.create_user(username='TestUser', password="testPassword!")
+    self.client.login(username='TestUser', password='testPassword!')
+    self.task = Task.objects.create(user=self.user, name='Task 1', 
+                                    date='2024-03-30', time='13:45', 
+                                    difficulty=1, priority=1, points=100)
+    self.profile = Profile.objects.get(user=self.user)
+    self.profile.total_points = 500
+    self.profile.save()
+
+  def test_postpone_task(self):
+    url = reverse('postpone-task', kwargs={'task_id': self.task.id})
+    response = self.client.post(url,{
+      'date': '2024-05-10',
+      'time': '14:45',
+    })
+    # Check if the view redirects (302 status code)
+    self.assertEqual(response.status_code, 302)
+
+    # Check if the points were deducted correctly
+    ## Refresh the profile from the database
+    self.profile.refresh_from_db()
+    expected_points = 500 - int(0.25 * self.task.points)
+    self.assertEqual(self.profile.total_points, expected_points)
+
+  def test_postpone_task_fail(self):
+    url = reverse('postpone-task', kwargs={'task_id': self.task.id})
+    #use date in the past, the postpone should fail
+    response = self.client.post(url,{
+      'date': '2024-02-10',
+      'time': '14:45',
+    })
+
+    self.profile.refresh_from_db()
+    expected_points = 500 - int(0.25 * self.task.points)
+    self.assertNotEqual(self.profile.total_points, expected_points)
+
+  def tearDown(self):
+    # Clean up created objects after the test
+    self.task.delete()
+    self.user.delete()
+
+class RemoveTaskTestCase(TestCase):
+  def setUp(self):
+    self.client = APIClient()
+    self.user = User.objects.create_user(username='TestUser', password="testPassword!")
+    self.client.login(username='TestUser', password='testPassword!')
+    self.task = Task.objects.create(user=self.user, name='Task 1', 
+                                    date='2024-03-30', time='13:45', 
+                                    difficulty=1, priority=1, points=100)
+    self.profile = Profile.objects.get(user=self.user)
+    self.profile.total_points = 500
+    self.profile.save()
+
+  def test_remove_task(self):
+    url = reverse('remove_task', kwargs={'task_id': self.task.id})
+    response = self.client.post(url)
+
+    # Check if the task is deleted and points are deducted
+    with self.assertRaises(Http404):
+       get_object_or_404(Task, id=self.task.id)  # Task should not exist after deletion
+
+    profile_before = self.profile.total_points
+    profile_after = Profile.objects.get(user=self.user).total_points
+    # Check if the points are deducted
+    self.assertNotEqual(profile_before, profile_after)
+    # Check if points were deducted: 500 - 100 = 400
+    self.assertEqual(profile_after, 400)
+
+  def tearDown(self):
+    # Clean up created objects after the test
+    self.task.delete()
+    self.user.delete()
+  
 
 # Unit Tests for indvidual models
 class ModelUnitTest(TestCase):
