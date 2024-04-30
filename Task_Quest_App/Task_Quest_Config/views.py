@@ -198,9 +198,6 @@ def postpone_task(request, task_id):
   # Redirect back to the calendar page
   return redirect('task-list')
 
-
-
-
 def start_game(request):
   megaShip = Item.objects.get(name='Mega Ship')
   gigaShip = Item.objects.get(name='Giga Ship')
@@ -219,8 +216,6 @@ def start_game(request):
       request.user.profile.save()
       
   return render(request, 'Task_Quest_Config/game.html', context)
-
-
 
 @login_required
 def home_page(request):
